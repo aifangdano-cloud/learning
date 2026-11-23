@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Roboto+Slab:wght@800;900&display=swap');
+
+:root {
+  --navy: #17136d;
+  --blue: #2820a1;
+  --blue-light: #4235c6;
+  --purple: #7050d6;
+  --pink: #f42d91;
+  --gold: #ffb323;
+  --ink: #17133f;
+  --muted: #77749b;
+  --paper: #fff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: Nunito, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(89,77,221,.8), transparent 33rem),
+    repeating-conic-gradient(from 0deg at 50% 12%, #211b88 0deg 8deg, #2922a0 8deg 16deg);
+  background-color: var(--navy);
+}
+.site-header { text-align: center; color: white; padding: 46px 20px 26px; }
+.eyebrow { margin: 0 0 7px; color: #a9a2ff; font-size: .72rem; font-weight: 900; letter-spacing: .19em; }
+.site-header .eyebrow { color: #ffca59; }
+.site-header h1 { margin: 0; font: 900 clamp(2rem, 5vw, 3.2rem)/1.1 "Roboto Slab", Georgia, serif; text-shadow: 0 4px 0 #100d50; }
+.subtitle { margin: 10px 0 0; color: #d5d1ff; }
+.decor { position: fixed; z-index: 0; color: rgba(157,149,255,.5); font-size: 1.4rem; line-height: 1.7; letter-spacing: .2em; pointer-events: none; }
+.decor-left { top: 20px; left: 14px; }
+.decor-right { top: 20px; right: 14px; text-align: right; }
+.page-wrap { width: min(960px, calc(100% - 32px)); margin: 0 auto 60px; position: relative; z-index: 1; }
+.panel { background: rgba(255,255,255,.97); border: 1px solid rgba(255,255,255,.6); border-radius: 22px; padding: clamp(20px, 4vw, 34px); box-shadow: 0 18px 55px rgba(9,7,58,.24); margin-bottom: 24px; }
+.hidden { display: none !important; }
+.section-heading { display: flex; gap: 15px; align-items: flex-start; margin-bottom: 22px; }
+.step-number { display: grid; place-items: center; flex: 0 0 42px; height: 42px; border-radius: 14px; color: white; background: var(--blue); font-weight: 900; }
+h2 { margin: 0; font: 900 clamp(1.45rem, 3vw, 2rem)/1.2 "Roboto Slab", Georgia, serif; }
+.section-heading p { color: var(--muted); margin: 7px 0 0; line-height: 1.5; }
+label { display: block; font-weight: 900; margin-bottom: 8px; }
+input[type="text"], input:not([type]) { width: 100%; padding: 15px 16px; border: 2px solid #e5e2fa; border-radius: 12px; font: inherit; outline: none; }
+input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(112,80,214,.13); }
+.primary-button, .secondary-button { border: 0; border-radius: 12px; padding: 14px 20px; font: 900 1rem Nunito, sans-serif; cursor: pointer; transition: transform .15s, filter .15s; }
+.primary-button { color: white; background: linear-gradient(100deg, #4c3bd0, #8b42d5); box-shadow: 0 7px 16px rgba(75,53,190,.23); }
+.primary-button span { margin-left: 10px; font-size: 1.2rem; }
+.primary-button:hover, .secondary-button:hover { transform: translateY(-2px); filter: brightness(1.06); }
+#start-form .primary-button { margin-top: 16px; width: 100%; }
+.small-note, .leaderboard-footnote { color: var(--muted); font-size: .83rem; margin: 12px 0 0; }
+.quiz-topline, .leaderboard-heading { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 22px; }
+.quiz-topline h2 { margin-top: 3px; }
+.progress-pill { background: #efedff; color: #5142bb; border-radius: 999px; padding: 8px 13px; font-weight: 900; white-space: nowrap; }
+.quiz-section { margin: 24px 0; }
+.quiz-section h3 { color: #4d3cb9; font: 900 1.15rem "Roboto Slab", Georgia, serif; padding-bottom: 10px; border-bottom: 2px solid #eeebff; }
+.question-card { padding: 17px 0; border-bottom: 1px solid #eeeefa; }
+.question-title { font-weight: 900; margin: 0 0 12px; line-height: 1.45; }
+.question-number { color: #7a69d5; margin-right: 6px; }
+.option-list { display: grid; gap: 8px; }
+.option { display: flex; align-items: flex-start; gap: 10px; padding: 11px 13px; border: 1px solid #e8e5f8; border-radius: 10px; cursor: pointer; transition: background .12s, border-color .12s; }
+.option:hover { background: #f6f4ff; border-color: #b7aaf2; }
+.option input { margin-top: 4px; accent-color: #5945c9; }
+.submit-area { margin-top: 22px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.status-text { color: var(--muted); font-size: .9rem; margin: 0; }
+.leaderboard-section { margin-top: 38px; }
+.leaderboard-heading { color: white; }
+.leaderboard-heading .subtitle { margin-top: 6px; }
+.refresh-button { border: 1px solid rgba(255,255,255,.4); background: rgba(255,255,255,.13); color: white; width: 45px; height: 45px; border-radius: 50%; font-size: 1.7rem; cursor: pointer; }
+.leaderboard-card { padding: clamp(16px, 3vw, 28px); border-radius: 22px; background: linear-gradient(145deg, #29218f, #1b176e); border: 1px solid rgba(255,255,255,.2); box-shadow: 0 20px 50px rgba(7,5,52,.3); color: white; overflow: hidden; }
+.podium { display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 12px; align-items: end; max-width: 720px; margin: 0 auto 28px; }
+.podium-place { text-align: center; min-width: 0; }
+.podium-avatar { width: clamp(66px, 13vw, 105px); aspect-ratio: 1; margin: 0 auto 9px; display: grid; place-items: center; border-radius: 50%; background: #fff4d6; border: 5px solid white; color: #34258e; font-size: clamp(2rem, 5vw, 3.2rem); box-shadow: 0 5px 0 rgba(0,0,0,.15); }
+.podium-place.first .podium-avatar { width: clamp(82px, 16vw, 132px); border-color: var(--gold); }
+.podium-rank { font: 900 clamp(1.1rem, 3vw, 1.7rem) "Roboto Slab", Georgia, serif; color: var(--gold); text-shadow: 0 2px 0 #7a3d08; }
+.podium-name { font-weight: 900; overflow-wrap: anywhere; margin-top: 7px; }
+.podium-score { color: #ffe3a0; font-weight: 900; font-size: 1.05rem; }
+.trophy { font-size: 2.2rem; line-height: 1.1; }
+.ranking-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+.ranking-row { display: grid; grid-template-columns: 42px 42px minmax(0,1fr) auto; gap: 9px; align-items: center; background: linear-gradient(90deg, #6650cf, #8b6be1); padding: 8px 12px; border-radius: 999px; min-width: 0; }
+.rank-number { font: 900 1.15rem "Roboto Slab", Georgia, serif; text-align: center; }
+.mini-avatar { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: #fff0d5; color: #36258f; font-size: 1.25rem; border: 2px solid white; }
+.rank-name { font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-score { font-weight: 900; white-space: nowrap; }
+.empty-state, .loading-text { text-align: center; color: #d7d1ff; padding: 28px 12px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+.result-stat { background: #f3f1ff; padding: 17px; border-radius: 14px; }
+.result-stat span { display: block; color: var(--muted); font-size: .85rem; font-weight: 800; }
+.result-stat strong { display: block; margin-top: 5px; font: 900 1.5rem "Roboto Slab", Georgia, serif; color: #4435b2; }
+.result-message { color: var(--muted); }
+.secondary-button { background: #eeeaff; color: #4a39b4; }
+footer { color: #aaa4ef; text-align: center; padding: 0 15px 28px; font-size: .72rem; font-weight: 900; letter-spacing: .15em; }
+footer span { color: var(--gold); padding: 0 6px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; background: #18145d; color: white; padding: 12px 18px; border-radius: 12px; box-shadow: 0 8px 25px #0003; transition: .2s; z-index: 10; max-width: calc(100% - 30px); text-align: center; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+button:disabled { opacity: .65; cursor: wait; }
+@media (max-width: 620px) {
+  .site-header { padding-top: 34px; }
+  .decor { display: none; }
+  .ranking-list { grid-template-columns: 1fr; }
+  .ranking-row { grid-template-columns: 34px 38px minmax(0,1fr) auto; }
+  .submit-area { align-items: stretch; }
+  .submit-area .primary-button { width: 100%; }
+}

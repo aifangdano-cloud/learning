@@ -1,329 +1,84 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>O&amp;G Case Learning</title>
-<style>
-:root{--bg:#fbf7f9;--card:#fff;--tx:#2a2230;--mu:#6e6377;--ac:#b0366b;--ok:#1f8a5b;--bad:#c23b3b;--bd:#e8dde3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17121a;--card:#221a27;--tx:#f1e9f3;--mu:#a99bb3;--ac:#e07aa8;--ok:#4cc38a;--bad:#ff7b7b;--bd:#3a2e42}}
-:root[data-theme="dark"]{--bg:#17121a;--card:#221a27;--tx:#f1e9f3;--mu:#a99bb3;--ac:#e07aa8;--ok:#4cc38a;--bad:#ff7b7b;--bd:#3a2e42}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-#app{max-width:640px;margin:0 auto;padding:16px}
-h1{font-size:24px;margin:8px 0 4px}h2{font-size:19px;margin:4px 0 8px}
-.mu{color:var(--mu);font-size:14px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:12px 0}
-button{font:inherit;color:inherit;cursor:pointer}
-.btn{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin:8px 0}
-.btn.main{background:var(--ac);color:#fff;border-color:var(--ac);text-align:center;font-weight:600}
-.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
-.btn.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--card))}
-.top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--mu)}
-.back{background:none;border:0;color:var(--ac);padding:4px 0;font-size:15px}
-.tbl{overflow-x:auto}
-table{border-collapse:collapse;font-size:14px;min-width:520px}
-th,td{border:1px solid var(--bd);padding:6px 8px;text-align:left;vertical-align:top}
-th{background:color-mix(in srgb,var(--ac) 12%,var(--card))}
-.fb{border-left:4px solid var(--ac);padding-left:10px;margin:10px 0;font-size:15px}
-.tag{display:inline-block;background:color-mix(in srgb,var(--ac) 15%,var(--card));color:var(--ac);border-radius:99px;padding:2px 10px;font-size:12px;font-weight:600}
-li{margin:4px 0}
-</style></head>
-<body><div id="app"></div>
-<script>
-var LEARN={
-disc:{name:"Vaginal discharge",icon:"💧",html:
-'<p class="mu">Start by asking: what colour, smell, itch, pain, and is it linked to sex, pregnancy or antibiotics? Normal (physiological) discharge is clear/white, odourless, non-itchy and varies with the cycle.</p>'+
-'<div class="tbl"><table><tr><th></th><th>Bacterial vaginosis</th><th>Candidiasis</th><th>Trichomoniasis</th></tr>'+
-'<tr><th>Cause</th><td>Loss of lactobacilli; Gardnerella + anaerobes</td><td>Candida albicans</td><td>Trichomonas vaginalis (STI)</td></tr>'+
-'<tr><th>Discharge</th><td>Thin, grey-white, fishy smell</td><td>Thick, white, curd-like; itch, red vulva</td><td>Frothy, yellow-green, offensive; dysuria</td></tr>'+
-'<tr><th>pH</th><td>&gt; 4.5</td><td>≤ 4.5 (normal)</td><td>&gt; 4.5</td></tr>'+
-'<tr><th>Test</th><td>Amsel: whiff test, clue cells</td><td>Pseudohyphae/yeast on wet mount or KOH</td><td>Motile flagellated protozoa; NAAT</td></tr>'+
-'<tr><th>Treatment</th><td>Metronidazole 400–500 mg BD 5–7 d</td><td>Azole: topical, or oral fluconazole (not in pregnancy)</td><td>Metronidazole; treat partner</td></tr></table></div>'+
-'<ul><li>Amsel criteria: any 3 of 4 (homogeneous discharge, pH &gt; 4.5, whiff test, clue cells).</li><li>Candida risk factors: pregnancy, diabetes, antibiotics, immunosuppression.</li><li>Always think of gonorrhoea/chlamydia if mucopurulent cervicitis or at-risk patient.</li></ul>'},
-con:{name:"Hormonal contraception",icon:"💊",html:
-'<p class="mu">Choose a method by checking contraindications first (use the WHO/UKMEC categories), then match the patient’s preference and side-effect tolerance.</p>'+
-'<div class="tbl"><table><tr><th>Method</th><th>Key points</th><th>Watch out</th></tr>'+
-'<tr><th>COC</th><td>Oestrogen + progestin; stops ovulation</td><td>Avoid: migraine with aura, past VTE, smoker ≥ 35, uncontrolled hypertension, &lt; 6 wk postpartum breastfeeding</td></tr>'+
-'<tr><th>POP</th><td>Progestin only; thickens mucus (desogestrel also stops ovulation)</td><td>Strict timing; safe with migraine aura and breastfeeding</td></tr>'+
-'<tr><th>DMPA</th><td>IM every 12 weeks</td><td>Irregular bleeding, delayed return of fertility, bone density</td></tr>'+
-'<tr><th>Implant</th><td>Lasts 3 years</td><td>Irregular bleeding; less effective with enzyme inducers</td></tr>'+
-'<tr><th>LNG-IUS</th><td>Lasts ~5 years; lighter periods</td><td>Useful in menorrhagia</td></tr>'+
-'<tr><th>Cu-IUD</th><td>Non-hormonal, 5–10 years; also emergency contraception</td><td>Heavier, more painful periods</td></tr></table></div>'+
-'<ul><li>Enzyme inducers (rifampicin, carbamazepine, phenytoin, St John’s wort) reduce COC, POP and implant efficacy. Use IUD/IUS or DMPA.</li><li>Missed ≥ 2 COC pills in week 1 with unprotected sex: give emergency contraception; condoms until 7 consecutive pills taken.</li></ul>'},
-hyper:{name:"Hypertensive disorders",icon:"📈",html:
-'<p class="mu">Hypertension in pregnancy = BP ≥ 140/90 mmHg on two occasions at least 4 h apart (after 20 weeks for the pregnancy-specific disorders).</p>'+
-'<div class="tbl"><table><tr><th>Disorder</th><th>Key features</th></tr>'+
-'<tr><th>Gestational hypertension</th><td>New hypertension after 20 wk, no proteinuria, no severe features</td></tr>'+
-'<tr><th>Preeclampsia</th><td>New hypertension after 20 wk + proteinuria (≥ 300 mg/24 h, PCR ≥ 0.3, or dipstick 2+), or hypertension + a severe feature</td></tr>'+
-'<tr><th>Chronic hypertension</th><td>Present before pregnancy or before 20 wk</td></tr>'+
-'<tr><th>Superimposed preeclampsia</th><td>Chronic hypertension + new proteinuria or severe features</td></tr>'+
-'<tr><th>Eclampsia</th><td>New seizures in preeclampsia, not due to other causes</td></tr></table></div>'+
-'<h2>Severe features</h2><ul><li>BP ≥ 160/110 (confirm within minutes)</li><li>Platelets &lt; 100,000/µL; liver enzymes ≥ 2× normal; creatinine &gt; 1.1 mg/dL or doubled</li><li>Persistent RUQ/epigastric pain, pulmonary oedema, new headache unresponsive to treatment, visual disturbance</li></ul>'+
-'<h2>Management</h2><ul><li>Severe-range BP: treat within 30–60 min (IV labetalol, IV hydralazine or oral nifedipine).</li><li>Magnesium sulfate for seizure prophylaxis in severe features/eclampsia, continued 24 h after delivery. It is not an antihypertensive. Toxicity: loss of patellar reflexes, RR &lt; 12, low urine output; antidote calcium gluconate.</li><li>Delivery: at ≥ 37 wk for any severity; at ≥ 34 wk with severe features. Delivery is the definitive treatment.</li><li>Prevention: low-dose aspirin from about 12 weeks in high-risk women (doses differ by guideline).</li><li>HELLP: Haemolysis, Elevated Liver enzymes, Low Platelets.</li></ul>'+
-'<p class="mu"><b>Sources:</b> ACOG Practice Bulletin No. 222 (2020). Cross-check with the hypertension chapters in Williams, Dutta and Ten Teachers; MgSO4 regimens (Pritchard vs IV) and thresholds differ between books.</p>'},
-hg:{name:"Hyperemesis gravidarum",icon:"🤢",html:
-'<p class="mu">Nausea and vomiting of pregnancy (NVP) is common in the first trimester. Hyperemesis gravidarum (HG) is the severe end: intractable vomiting with &gt; 5% pre-pregnancy weight loss, dehydration and electrolyte imbalance.</p>'+
-'<ul><li>Usually starts at 4–7 wk, peaks around 9–12 wk, and settles by about 20 wk in most. If it first presents after 10 wk, look for other causes.</li><li>Exclude: UTI, molar pregnancy/multiple pregnancy (ultrasound), thyrotoxicosis, GI and neurological causes.</li><li>Tests: urine dipstick (ketones, UTI), U&amp;E (low K+, low Na+, hypochloraemic alkalosis), TFTs, ultrasound.</li></ul>'+
-'<h2>Management</h2><ul><li>First-line antiemetics: antihistamines (e.g. cyclizine), phenothiazines (e.g. prochlorperazine), or doxylamine/pyridoxine. Second-line: ondansetron, metoclopramide. Combine drugs if one fails; give regularly, not PRN.</li><li>IV normal saline with potassium. Avoid dextrose until thiamine has been given (risk of Wernicke encephalopathy).</li><li>Thiamine for all women admitted with prolonged vomiting.</li><li>Wernicke: confusion, ataxia, ophthalmoplegia/nystagmus. Treat with IV thiamine.</li><li>Consider VTE prophylaxis in admitted women.</li></ul>'+
-'<p class="mu"><b>Sources:</b> RCOG Green-top Guideline No. 69 (2016; second edition 2024). The order of second-line drugs differs between editions and textbooks, so check what Williams, Dutta and Ten Teachers say.</p>'},
-ana:{name:"Anaemia in pregnancy",icon:"🩸",html:
-'<p class="mu">Plasma volume rises more than red cell mass, so Hb falls physiologically (haemodilution). Iron deficiency is the commonest cause.</p>'+
-'<ul><li>WHO: anaemia if Hb &lt; 11 g/dL in pregnancy; severe if &lt; 7 g/dL. BSH (UK): &lt; 110 g/L in 1st trimester, &lt; 105 g/L in 2nd and 3rd, &lt; 100 g/L postpartum.</li><li>Other causes: folate or B12 deficiency, haemoglobinopathies (thalassaemia, sickle cell), blood loss, hookworm and malaria in endemic areas.</li><li>Tests: FBC with MCV, ferritin (low in iron deficiency), blood film, Hb electrophoresis if indicated.</li></ul>'+
-'<h2>Management of iron deficiency</h2><ul><li>Oral iron 40–80 mg elemental iron once daily or on alternate days, on an empty stomach. Alternate-day dosing or a lower-dose preparation reduces GI side effects; avoid slow-release forms.</li><li>Recheck Hb after 2–3 weeks to confirm response.</li><li>IV iron if intolerant of or not responding to oral iron, or if detected late. Avoid in the first trimester.</li><li>Multivitamins do not contain enough iron to treat deficiency.</li></ul>'+
-'<p class="mu"><b>Sources:</b> British Society for Haematology guideline on iron deficiency in pregnancy (2019) and WHO definition. Prophylactic doses (e.g. 100 mg iron + folic acid) vary by country, so check Dutta and Ten Teachers.</p>'},
-obs:{name:"Obstetric basics",icon:"🤰",html:
-'<ul><li><b>EDD (Naegele’s rule):</b> first day of LMP + 9 months + 7 days. Assumes a regular 28-day cycle; early ultrasound (CRL) is more accurate if dates are unsure.</li><li><b>Gravida:</b> number of pregnancies including the current one. <b>Para:</b> pregnancies reaching viability (the cut-off differs by country and textbook). Written like G4 P2+1: two births plus one miscarriage/abortion.</li><li><b>Symphysis-fundal height:</b> in cm roughly equals weeks of gestation from 24 to 36 wk (± 2–3 cm). A larger discrepancy needs a growth scan and dating check.</li><li><b>Landmarks:</b> fundus at the symphysis at 12 wk, at the umbilicus at about 20 wk.</li><li><b>Obstetric history:</b> for each pregnancy ask year, gestation, mode of delivery, birth weight, complications and outcome.</li></ul>'+
-'<p class="mu"><b>Sources:</b> standard textbook content. Please verify against Ten Teachers and Dutta, especially the definition of para.</p>'}
-};
-var CASES=[
-{t:"disc",title:"The fishy smell",story:"Aisha, 24, has thin grey-white discharge with a fishy smell, worse after sex. No itch, no pain.",steps:[
-{q:"Which bedside findings support your diagnosis?",o:[
-["pH &gt; 4.5, positive whiff test, clue cells",1,"These are Amsel criteria: thin homogeneous discharge, pH &gt; 4.5, whiff test, clue cells (any 3 of 4)."],
-["pH ≤ 4.5 with pseudohyphae",0,"That pattern is candidiasis, which is itchy with thick curdy discharge."],
-["Motile flagellated organisms on wet mount",0,"That is trichomoniasis: frothy yellow-green discharge."],
-["Gram-negative intracellular diplococci",0,"That is gonorrhoea, which causes mucopurulent cervicitis rather than fishy discharge."]]},
-{pre:"Diagnosis: bacterial vaginosis (loss of lactobacilli, overgrowth of Gardnerella and anaerobes).",q:"Best treatment?",o:[
-["Metronidazole 400–500 mg BD for 5–7 days",1,"Correct. Oral metronidazole (or topical metronidazole/clindamycin) is first line."],
-["Single-dose fluconazole 150 mg",0,"Fluconazole is an antifungal, so it does not treat BV."],
-["Ceftriaxone IM + azithromycin",0,"That covers gonorrhoea/chlamydia, not BV."],
-["No treatment ever needed",0,"Symptomatic BV should be treated. It also raises the risk of preterm birth and infection after procedures."]]}],
-take:"BV is not strictly an STI, so there is no routine partner treatment. Metronidazole is the mainstay."},
-{t:"disc",title:"Itchy after antibiotics",story:"Mei, 30, is 10 weeks pregnant with an itchy vulva and thick white curd-like discharge, no odour. She just finished antibiotics for a UTI. Vulva is red; vaginal pH is 4.",steps:[
-{q:"Most likely diagnosis?",o:[
-["Vulvovaginal candidiasis",1,"Itch, curdy discharge, red vulva and normal pH point to Candida."],
-["Bacterial vaginosis",0,"BV is non-itchy with a fishy smell and pH &gt; 4.5."],
-["Trichomoniasis",0,"That gives frothy yellow-green discharge with pH &gt; 4.5."],
-["Physiological discharge",0,"Physiological discharge is not itchy or inflamed."]]},
-{pre:"Diagnosis: candidiasis (yeast/pseudohyphae on wet mount or KOH).",q:"Best treatment, since she is pregnant?",o:[
-["Topical azole (e.g. clotrimazole pessary or cream) for 7 days",1,"Correct. Topical azoles are preferred in pregnancy."],
-["Oral fluconazole 150 mg once",0,"Oral azoles are generally avoided in pregnancy."],
-["Oral metronidazole 2 g once",0,"That treats trichomoniasis, not Candida."],
-["Oral doxycycline",0,"Wrong organism, and tetracyclines are contraindicated in pregnancy."]]}],
-take:"Risk factors: pregnancy, diabetes, antibiotics, immunosuppression. Check glucose if infections are recurrent."},
-{t:"disc",title:"Frothy and offensive",story:"Sara, 27, has frothy yellow-green offensive discharge, dysuria and dyspareunia. Cervix is red with punctate haemorrhages. pH 5.5.",steps:[
-{q:"Which organism?",o:[
-["Trichomonas vaginalis",1,"A motile flagellated protozoan, seen on wet mount. The strawberry cervix is classic but uncommon."],
-["Candida albicans",0,"Candida gives curdy, itchy discharge with normal pH."],
-["Gardnerella vaginalis",0,"BV discharge is thin, grey and fishy, with no inflammation."],
-["Neisseria gonorrhoeae",0,"It causes purulent cervicitis; it does not give frothy discharge."]]},
-{pre:"Diagnosis: trichomoniasis, which is an STI.",q:"Management?",o:[
-["Metronidazole (2 g once or 400–500 mg BD for 7 days), treat partner, screen for other STIs",1,"Correct. Partners must be treated, and co-infections are common."],
-["Metronidazole for her only",0,"Untreated partners cause reinfection."],
-["Topical clotrimazole",0,"Antifungal, so it does not treat a protozoan."],
-["Reassure; it is physiological",0,"This is symptomatic infection with inflammation."]]}],
-take:"Trichomoniasis is sexually transmitted: always treat the partner and offer STI screening."},
-{t:"con",title:"Flashing lights",story:"Priya, 26, wants the combined pill. She gets migraines preceded by flashing lights and zigzag lines. BP 110/70, BMI 22.",steps:[
-{q:"What do you advise?",o:[
-["Avoid combined hormonal contraception and offer an oestrogen-free option",1,"Migraine with aura plus oestrogen raises the risk of ischaemic stroke (WHO MEC/UKMEC category 4)."],
-["Start the COC, she is young",0,"Age does not remove the stroke risk."],
-["Start the COC with low-dose aspirin",0,"Aspirin does not make it safe."],
-["Use a COC with a different progestin",0,"The oestrogen is the problem, not the progestin."]]},
-{pre:"The COC is contraindicated.",q:"Which is a suitable alternative?",o:[
-["LNG-IUS, implant, progestin-only pill (or Cu-IUD)",1,"All oestrogen-free, so they are suitable."],
-["Combined vaginal ring",0,"It contains oestrogen."],
-["Combined patch",0,"It contains oestrogen."],
-["A different brand of COC",0,"Still contains oestrogen."]]}],
-take:"Migraine with aura means no oestrogen. Progestin-only and non-hormonal methods are fine."},
-{t:"con",title:"Missed pills",story:"Lina, 21, is on a COC. She missed 2 pills on days 3 and 4 of a new pack (week 1) and had unprotected sex 2 days ago.",steps:[
-{q:"Most important next step?",o:[
-["Offer emergency contraception, take the latest missed pill now, and continue the pack",1,"Missing ≥ 2 pills in week 1 with unprotected sex can allow ovulation, so EC is indicated."],
-["Carry on with no extra precautions",0,"She is at risk of pregnancy."],
-["Stop the pack and restart after 7 days",0,"That lengthens the pill-free gap and raises ovulation risk."],
-["Take double doses for 3 days",0,"Not a recommended rule."]]},
-{pre:"EC offered; she continues the pack.",q:"How long must she use condoms or abstain?",o:[
-["Until 7 consecutive pills have been taken",1,"Seven days of continuous pill-taking are needed to re-suppress ovulation."],
-["Until her next period",0,"Not the rule."],
-["Not needed once she has had EC",0,"She still needs cover while the pill re-establishes protection."],
-["14 days",0,"Seven days is the standard."]]}],
-take:"The risk is highest when pills are missed next to the pill-free interval (week 1 or end of week 3)."},
-{t:"con",title:"Pill and TB drugs",story:"Mrs Tan, 35, has started rifampicin for TB. She takes a combined pill and asks if she can still rely on it.",steps:[
-{q:"What is the effect of rifampicin?",o:[
-["It induces liver enzymes, lowering hormone levels, so COC and POP may fail",1,"Enzyme inducers speed up hormone metabolism."],
-["It increases pill efficacy",0,"The opposite is true."],
-["No interaction",0,"There is a significant interaction."],
-["It only matters if taken in the same hour",0,"Timing does not fix an enzyme effect."]]},
-{pre:"Enzyme induction reduces COC and POP effectiveness.",q:"Best contraception while on rifampicin?",o:[
-["Cu-IUD, LNG-IUS or DMPA",1,"These are not affected by enzyme inducers."],
-["COC with a double dose",0,"Not a reliable fix."],
-["Progestin-only implant",0,"Its effectiveness is also reduced by enzyme inducers."],
-["Pill plus condoms for one week",0,"Too short, and the interaction continues throughout treatment."]]}],
-take:"Enzyme inducers: rifampicin, carbamazepine, phenytoin, St John’s wort. Use IUD/IUS or DMPA."},
-{t:"hyper",title:"Headache at 36 weeks",story:"Nadia, 32, G1, 36 weeks. BP 168/112, still 166/110 after 15 minutes. She has a headache and epigastric pain. Urine dipstick shows 3+ protein.",steps:[
-{q:"Most likely diagnosis?",o:[
-["Preeclampsia with severe features",1,"New hypertension after 20 weeks with proteinuria, plus BP ≥ 160/110 and RUQ/epigastric pain."],
-["Gestational hypertension",0,"There is proteinuria and severe-range BP, so this is preeclampsia."],
-["Chronic hypertension",0,"No hypertension before pregnancy or before 20 weeks is described."],
-["Eclampsia",0,"Eclampsia needs seizures. She has none yet."]]},
-{pre:"Diagnosis: preeclampsia with severe features.",q:"Immediate management?",o:[
-["Admit, start magnesium sulfate, and give a rapid-acting antihypertensive within 60 minutes",1,"Mg sulfate prevents seizures; labetalol, hydralazine or nifedipine control the BP."],
-["Magnesium sulfate alone to bring the BP down",0,"Magnesium sulfate is not an antihypertensive."],
-["Oral methyldopa and review in one week",0,"Severe features need admission and urgent treatment."],
-["Diuretics for oedema",0,"Diuretics are not part of treatment and can reduce plasma volume."]]}],
-take:"Severe-range BP needs treatment within 60 min. At ≥ 34 weeks with severe features, plan delivery once she is stabilised."},
-{t:"hyper",title:"On magnesium sulfate",story:"Mrs R is on a magnesium sulfate infusion for severe preeclampsia. Now her respiratory rate is 9/min, her patellar reflexes are absent and urine output has dropped.",steps:[
-{q:"What is the most likely problem?",o:[
-["Magnesium toxicity",1,"Loss of patellar reflexes is the earliest sign, followed by respiratory depression and cardiac effects."],
-["Impending eclampsia",0,"Eclampsia presents with hyperreflexia and seizures, not absent reflexes."],
-["Opioid overdose",0,"No opioid was given, and absent reflexes point to magnesium."],
-["Normal effect of treatment",0,"Absent reflexes and slow breathing are warning signs."]]},
-{pre:"Diagnosis: magnesium toxicity.",q:"What should you do?",o:[
-["Stop the infusion, give calcium gluconate IV, and support airway and breathing",1,"Calcium gluconate (10 mL of 10% IV, slowly) is the antidote."],
-["Increase the infusion rate",0,"This would worsen toxicity."],
-["Give naloxone",0,"Naloxone reverses opioids, not magnesium."],
-["Give flumazenil",0,"Flumazenil reverses benzodiazepines."]]}],
-take:"Monitor reflexes, respiratory rate and urine output during magnesium therapy. Reduced renal function raises the risk of toxicity."},
-{t:"hyper",title:"Known hypertensive",story:"Mrs Lee, 34, has booking BP 150/95 at 8 weeks. At 28 weeks, BP is 170/110 with new proteinuria and platelets 80,000/µL.",steps:[
-{q:"Best diagnosis?",o:[
-["Chronic hypertension with superimposed preeclampsia (severe features)",1,"Hypertension before 20 weeks, now with new proteinuria, severe-range BP and thrombocytopenia."],
-["Gestational hypertension",0,"Hypertension was present before 20 weeks."],
-["Chronic hypertension only",0,"New proteinuria and low platelets indicate superimposed preeclampsia."],
-["HELLP syndrome",0,"HELLP needs haemolysis and raised liver enzymes as well. These are not described."]]}],
-take:"Chronic hypertension can be complicated by superimposed preeclampsia, which is managed like preeclampsia."},
-{t:"hg",title:"Vomiting for two weeks",story:"Wei Ling, 8 weeks pregnant, vomits about 10 times a day. She has lost 6 kg (more than 5% of her weight). She is dry, pulse 110, with ketonuria.",steps:[
-{q:"Which initial tests are most appropriate?",o:[
-["Urine dipstick, U&amp;E, TFTs and an ultrasound",1,"Look for UTI, electrolyte disturbance, thyrotoxicosis and multiple or molar pregnancy."],
-["CT abdomen",0,"Not indicated, and avoid radiation without a clear reason."],
-["Upper GI endoscopy",0,"Not a first step."],
-["No tests, just reassure",0,"She has dehydration and weight loss, so she needs assessment."]]},
-{pre:"Diagnosis: hyperemesis gravidarum, admitted.",q:"Which IV fluid plan is best?",o:[
-["Normal saline with potassium, giving thiamine before any dextrose",1,"Correct. Thiamine prevents Wernicke encephalopathy."],
-["5% dextrose to treat ketosis, thiamine later",0,"Dextrose before thiamine can precipitate Wernicke encephalopathy."],
-["Plain water by mouth only",0,"She is vomiting and dehydrated."],
-["Colloid infusion",0,"Not indicated."]]}],
-take:"Give first-line antiemetics regularly, and combine drugs if one fails."},
-{t:"hg",title:"Confused after weeks of vomiting",story:"Joy, 11 weeks, has had severe vomiting for 5 weeks with poor intake. She is now confused, unsteady and has nystagmus.",steps:[
-{q:"Diagnosis and treatment?",o:[
-["Wernicke encephalopathy: IV thiamine",1,"Confusion, ataxia and ophthalmoplegia/nystagmus point to thiamine deficiency."],
-["Eclampsia: magnesium sulfate",0,"Eclampsia occurs after 20 weeks with hypertension and seizures."],
-["Hypoglycaemia: give dextrose first",0,"Dextrose before thiamine can worsen Wernicke."],
-["Anxiety: reassure",0,"These are neurological signs needing urgent treatment."]]}],
-take:"Prolonged vomiting with poor intake needs thiamine supplementation."},
-{t:"ana",title:"Tired at 20 weeks",story:"Ruth, 20 weeks, is tired and pale. Hb 98 g/L, MCV 72 fL, ferritin 8 µg/L.",steps:[
-{q:"Most likely diagnosis?",o:[
-["Iron deficiency anaemia",1,"Low Hb, microcytosis and low ferritin."],
-["Physiological haemodilution",0,"Hb is below the threshold and ferritin is low."],
-["Vitamin B12 deficiency",0,"B12 deficiency causes a macrocytic picture."],
-["Anaemia of chronic disease",0,"Ferritin would be normal or high."]]},
-{pre:"Diagnosis: iron deficiency anaemia.",q:"Best next step?",o:[
-["Oral iron 40–80 mg elemental daily or on alternate days, and recheck Hb in 2–3 weeks",1,"Correct. Check the response at 2–3 weeks."],
-["Urgent blood transfusion",0,"She is stable and Hb is only mildly low."],
-["A multivitamin tablet",0,"Multivitamins do not contain enough iron."],
-["Folic acid alone",0,"This does not correct iron deficiency."]]}],
-take:"If there is no response, check adherence, absorption and other causes before moving to IV iron."},
-{t:"ana",title:"Cannot tolerate iron",story:"Aisyah, 32 weeks, Hb 80 g/L with low ferritin. She vomits with every oral iron tablet she tries.",steps:[
-{q:"Best approach?",o:[
-["IV iron, since she is in the third trimester and intolerant of oral iron",1,"IV iron is appropriate from the second trimester when oral iron fails or is not tolerated."],
-["Stop treatment until after delivery",0,"Delivery is close and she is significantly anaemic."],
-["Switch to a slow-release oral preparation",0,"Slow-release forms are discouraged; absorption is poorer."],
-["Routine blood transfusion for everyone with Hb 80",0,"Transfusion is for unstable or severely symptomatic patients, not routine."]]}],
-take:"IV iron is avoided in the first trimester. It raises Hb faster than oral iron."},
-{t:"obs",title:"Due date",story:"A woman with regular 28-day cycles has her LMP on 10 March 2026.",steps:[
-{q:"What is her EDD by Naegele’s rule?",o:[
-["17 December 2026",1,"10 March + 7 days = 17 March, then + 9 months = 17 December."],
-["10 December 2026",0,"You forgot to add 7 days."],
-["17 November 2026",0,"That adds only 8 months."],
-["10 January 2027",0,"That adds 10 months."]]}],
-take:"Naegele’s rule assumes a regular 28-day cycle. Use an early ultrasound if dates are uncertain."},
-{t:"obs",title:"Gravida and para",story:"A 35-year-old at 30 weeks has had two term deliveries and one miscarriage at 8 weeks before this pregnancy.",steps:[
-{q:"How is her obstetric score written?",o:[
-["G4 P2+1",1,"Gravida counts all pregnancies including the current one (2 + 1 + 1 = 4). P2 = two births, +1 = one miscarriage."],
-["G3 P2+1",0,"This forgets the current pregnancy."],
-["G4 P3",0,"A miscarriage is not counted as a birth."],
-["G3 P3",0,"Count is wrong, and the miscarriage is not a birth."]]}],
-take:"Always count the current pregnancy in gravida. Notation varies, so check how your textbook writes it."},
-{t:"obs",title:"Small for dates?",story:"At 32 weeks (dates confirmed by early scan), a woman’s symphysis-fundal height measures 24 cm.",steps:[
-{q:"Best next step?",o:[
-["Arrange an ultrasound for fetal growth and liquor, and review the risk factors",1,"A fundal height more than 2–3 cm below expected suggests growth restriction or oligohydramnios."],
-["Reassure, this is normal",0,"Expected is about 32 cm, give or take 2–3 cm."],
-["Induce labour",0,"Not before the cause is assessed."],
-["Start steroids immediately",0,"Steroids are for anticipated preterm birth, not for this finding alone."]]}],
-take:"SFH is a screening tool. A discrepancy of more than 2–3 cm needs an ultrasound."}
-];
-var S={v:"home",tp:"",q:[],ci:0,si:0,sc:0,st:0,ok:0,n:0,opts:[],pk:null};
-function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
-function go(v,tp){S.v=v;if(tp)S.tp=tp;R();window.scrollTo(0,0)}
-function start(tp){S.tp=tp;S.q=shuf(CASES.filter(function(c){return tp=="all"||c.t==tp}));S.ci=0;S.si=0;S.sc=0;S.st=0;S.ok=0;S.n=0;load();go("play")}
-function load(){S.pk=null;S.opts=shuf(CASES[CASES.indexOf(S.q[S.ci])].steps[S.si].o)}
-function pick(i){if(S.pk!==null)return;S.pk=i;S.n++;if(S.opts[i][1]){S.ok++;S.sc+=10+Math.min(S.st,5)*2;S.st++}else S.st=0;R()}
-function nxt(){var c=S.q[S.ci];if(S.si<c.steps.length-1){S.si++}else{S.ci++;S.si=0}if(S.ci>=S.q.length){go("end");return}load();R();window.scrollTo(0,0)}
-function R(){if(S.v=="oh"||S.v=="op"||S.v=="od"){RO();return}var a=document.getElementById("app"),h="";
-if(S.v=="home"){h='<h1>O&amp;G Case Learning</h1><p class="mu">Read the key notes, then practise on short patient cases. Each answer comes with an explanation.</p>';
-for(var k in LEARN){h+='<div class="card"><h2>'+LEARN[k].icon+' '+LEARN[k].name+'</h2><button class="btn" onclick="go(\'learn\',\''+k+'\')">📖 Key notes</button><button class="btn main" onclick="start(\''+k+'\')">Practise cases</button></div>'}
-h+='<button class="btn main" onclick="start(\'all\')">Mixed practice (all topics)</button><button class="btn main" onclick="oh()">🗣️ History-taking (OSCE)</button><p class="mu">For study use. Hypertension, hyperemesis and anaemia notes follow ACOG, RCOG and BSH guidelines; always cross-check with your textbooks (Ten Teachers, Williams, Dutta) and local protocols.</p>'}
-else if(S.v=="learn"){var L=LEARN[S.tp];h='<button class="back" onclick="go(\'home\')">← Back</button><h1>'+L.icon+' '+L.name+'</h1>'+L.html+'<button class="btn main" onclick="start(\''+S.tp+'\')">Practise cases</button>'}
-else if(S.v=="play"){var c=S.q[S.ci],s=c.steps[S.si],d=S.pk!==null;
-h='<div class="top"><button class="back" onclick="go(\'home\')">← Exit</button><span>Case '+(S.ci+1)+'/'+S.q.length+' · Score '+S.sc+' · 🔥'+S.st+'</span></div>';
-h+='<div class="card"><span class="tag">'+LEARN[c.t].name+'</span><h2>'+c.title+'</h2><p>'+c.story+'</p>'+(s.pre?'<p class="fb">'+s.pre+'</p>':'')+'</div><h2>'+s.q+'</h2>';
-for(var i=0;i<S.opts.length;i++){var o=S.opts[i],cl="btn";if(d){if(o[1])cl+=" ok";else if(i==S.pk)cl+=" bad"}
-h+='<button class="'+cl+'" onclick="pick('+i+')">'+o[0]+'</button>'}
-if(d){var p=S.opts[S.pk];h+='<div class="card"><b>'+(p[1]?"✅ Correct":"❌ Not quite")+'</b><p class="fb">'+p[2]+'</p>';
-if(!p[1]){for(var j=0;j<S.opts.length;j++)if(S.opts[j][1])h+='<p class="fb"><b>Answer:</b> '+S.opts[j][0]+'. '+S.opts[j][2]+'</p>'}
-if(S.si==c.steps.length-1)h+='<p><b>Take-home:</b> '+c.take+'</p>';
-h+='<button class="btn main" onclick="nxt()">'+((S.si==c.steps.length-1&&S.ci==S.q.length-1)?"Finish":"Next")+'</button></div>'}}
-else{var pc=Math.round(100*S.ok/S.n);h='<h1>Done 🎉</h1><div class="card"><h2>Score: '+S.sc+'</h2><p>'+S.ok+' of '+S.n+' questions correct ('+pc+'%)</p><p class="mu">'+(pc>=80?"Great work. Try another topic or mixed practice.":"Re-read the key notes, then try again. Cases appear in a new order each time.")+'</p></div><button class="btn main" onclick="start(\''+S.tp+'\')">Play again</button><button class="btn" onclick="go(\'learn\',\''+(S.tp=="all"?"disc":S.tp)+'\')">📖 Review notes</button><button class="btn" onclick="go(\'home\')">Home</button>'}
-a.innerHTML=h}
-var OS=[
-{title:"Discharge clinic",tag:"Vaginal discharge, 27 years",lim:9,intro:"Sara, 27, presents with vaginal discharge for 5 days. Take a focused history.",qs:[
-["Presenting complaint","What colour and consistency is the discharge?","It is yellow-green and frothy.",1],
-["Presenting complaint","Does it have a smell?","Yes, quite offensive.",1],
-["Associated symptoms","Is there any itching?","Only mild soreness, not really itchy.",1],
-["Associated symptoms","Any pain passing urine or during sex?","It stings when I pass urine, and sex is painful.",1],
-["Associated symptoms","Any lower abdominal pain or fever?","No.",0],
-["Sexual history","Do you have a new partner? Does he have symptoms?","New partner two weeks ago. He says he has no symptoms.",1],
-["Sexual history","Do you use condoms?","No, we did not use any.",1],
-["Gynaecological","When was your last menstrual period? Could you be pregnant?","3 weeks ago, regular. I do not think I am pregnant.",1],
-["Gynaecological","Have you had this before?","No, this is the first time.",0],
-["Past/Family/Social","Any family history of breast cancer?","No.",0],
-["Past/Family/Social","Do you smoke?","No.",0],
-["Past/Family/Social","Any cough or chest pain?","No.",0]],
-dx:{q:"Most likely diagnosis?",o:[["Trichomoniasis",1,"Frothy yellow-green offensive discharge, dysuria, dyspareunia, and a new partner without condoms."],["Bacterial vaginosis",0,"BV is thin grey discharge with a fishy smell and no dysuria or inflammation."],["Candidiasis",0,"Candida is thick, curdy and very itchy."],["Physiological discharge",0,"Physiological discharge is not offensive or painful."]]},
-take:"Sexual history drives the STI work-up: treat the partner and screen for other STIs."},
-{title:"Antenatal headache",tag:"34 weeks pregnant, 32 years",lim:10,intro:"Nadia, 32, G1P0, 34 weeks, attends antenatal clinic with a headache for 2 days.",qs:[
-["Presenting complaint","Where is the headache, how severe is it, and does paracetamol help?","Frontal and throbbing. Paracetamol has not helped.",1],
-["Associated symptoms","Any visual disturbance, such as flashing lights?","Yes, I see flashing lights.",1],
-["Associated symptoms","Any pain in the upper abdomen or under the right ribs?","Some pain under my right ribs.",1],
-["Associated symptoms","Any swelling of the face or hands?","My face and hands look puffy.",1],
-["Associated symptoms","Any vaginal bleeding or fluid leaking?","No.",0],
-["Obstetric","How are the baby’s movements?","The baby seems quieter than usual.",1],
-["Obstetric","Were your BP and urine normal at previous visits?","BP was normal at booking. I do not remember about the urine.",1],
-["Past/Family","Any family history of high BP in pregnancy?","My mother had high blood pressure in pregnancy.",1],
-["Past/Family","Any diabetes, kidney disease or high BP before pregnancy?","No.",1],
-["Social","Do you drink alcohol?","No.",0],
-["Social","Any recent travel?","No.",0],
-["Social","How is your appetite?","Normal.",0]],
-dx:{q:"Which is the most important concern?",o:[["Preeclampsia: check BP and urine urgently",1,"Headache with visual symptoms, RUQ pain, puffiness and a family history point to preeclampsia with possible severe features."],["Tension headache",0,"Visual symptoms and RUQ pain in late pregnancy must not be dismissed."],["Migraine",0,"There is no migraine history, and RUQ pain and puffiness suggest preeclampsia."],["Normal pregnancy discomfort",0,"These are red-flag symptoms."]]},
-take:"Headache, visual disturbance and epigastric pain late in pregnancy: measure BP and urine protein, and send bloods."},
-{title:"Contraception consult",tag:"Wants the combined pill, 26 years",lim:9,intro:"Priya, 26, would like to start the combined oral contraceptive pill.",qs:[
-["Contraindication check","Do you get migraines? Any visual symptoms before them?","Yes, migraines. I see flashing lights beforehand.",1],
-["Contraindication check","Do you smoke?","No.",1],
-["Contraindication check","Any history of high blood pressure?","No, it was normal at my last check.",1],
-["Contraindication check","Any personal or family history of blood clots?","No.",1],
-["Contraindication check","Are you breastfeeding, or have you recently had a baby?","No.",1],
-["Contraindication check","Are you taking any medicines?","Only paracetamol when needed.",1],
-["Gynaecological","When was your last period? Could you be pregnant?","2 weeks ago. I am not pregnant.",1],
-["Gynaecological","Are your periods regular?","Yes.",0],
-["Contraception","Have you used contraception before?","Condoms only.",0],
-["Past/Family","Any family history of breast cancer?","No.",0],
-["Social","What do you do for work?","I am a teacher.",0],
-["Social","How tall are you?","About 165 cm.",0]],
-dx:{q:"Best advice?",o:[["Avoid the combined pill; offer progestin-only or non-hormonal options",1,"Migraine with aura plus oestrogen raises stroke risk, so combined methods are contraindicated."],["Start the combined pill",0,"It is contraindicated with migraine with aura."],["Start the pill with low-dose aspirin",0,"Aspirin does not make it safe."],["No contraception is needed",0,"She requested contraception and is at risk of pregnancy."]]},
-take:"Always screen for contraindications before prescribing: migraine with aura, smoking, BP, VTE, breastfeeding, drug interactions."}];
-var O={i:0,asked:[],left:0,pk:null,opts:[]};
-function oh(){S.v="oh";RO();window.scrollTo(0,0)}
-function os(i){O={i:i,asked:[],left:OS[i].lim,pk:null,opts:shuf(OS[i].dx.o)};S.v="op";RO();window.scrollTo(0,0)}
-function oa(k){if(O.left<1||O.asked.indexOf(k)>=0)return;O.asked.push(k);O.left--;RO()}
-function od(){S.v="od";RO();window.scrollTo(0,0)}
-function odp(i){if(O.pk!==null)return;O.pk=i;RO()}
-function RO(){var a=document.getElementById("app"),h="",c=OS[O.i],k,i;
-if(S.v=="oh"){h='<button class="back" onclick="go(\'home\')">← Back</button><h1>🗣️ History-taking (OSCE)</h1><p class="mu">You have a limited number of questions. Ask the ones that matter, then give your diagnosis or advice.</p>';for(i=0;i<OS.length;i++)h+='<button class="btn" onclick="os('+i+')"><b>'+OS[i].title+'</b><br><span class="mu">'+OS[i].tag+'</span></button>'}
-else if(S.v=="op"){h='<div class="top"><button class="back" onclick="oh()">← Exit</button><span>Questions left: '+O.left+'</span></div><div class="card"><h2>'+c.title+'</h2><p>'+c.intro+'</p></div>';
-for(i=0;i<O.asked.length;i++){k=O.asked[i];h+='<div class="card"><b>You:</b> '+c.qs[k][1]+'<p class="fb"><b>Patient:</b> '+c.qs[k][2]+'</p></div>'}
-if(O.left>0){var seen=[];for(k=0;k<c.qs.length;k++){var ct=c.qs[k][0];if(seen.indexOf(ct)<0){seen.push(ct);var part='';for(var m=0;m<c.qs.length;m++)if(c.qs[m][0]==ct&&O.asked.indexOf(m)<0)part+='<button class="btn" onclick="oa('+m+')">'+c.qs[m][1]+'</button>';if(part)h+='<p class="mu"><b>'+ct+'</b></p>'+part}}}else h+='<p class="mu">No questions left.</p>';
-h+='<button class="btn main" onclick="od()">Give diagnosis / advice</button>'}
-else{var d=O.pk!==null;h='<button class="back" onclick="oh()">← Exit</button><div class="card"><h2>'+c.title+'</h2></div><h2>'+c.dx.q+'</h2>';
-for(i=0;i<O.opts.length;i++){var cl="btn";if(d){if(O.opts[i][1])cl+=" ok";else if(i==O.pk)cl+=" bad"}h+='<button class="'+cl+'" onclick="odp('+i+')">'+O.opts[i][0]+'</button>'}
-if(d){var tot=0,got=0,miss='';for(k=0;k<c.qs.length;k++)if(c.qs[k][3]){tot++;if(O.asked.indexOf(k)>=0)got++;else miss+='<li><b>'+c.qs[k][1]+'</b> → '+c.qs[k][2]+'</li>'}
-h+='<div class="card"><b>'+(O.opts[O.pk][1]?"✅ Correct":"❌ Not quite")+'</b><p class="fb">'+O.opts[O.pk][2]+'</p><p><b>Key questions asked:</b> '+got+' of '+tot+'</p>'+(miss?'<p><b>You missed:</b></p><ul>'+miss+'</ul>':'<p>You covered every key question. 🎉</p>')+'<p><b>Take-home:</b> '+c.take+'</p><button class="btn main" onclick="os('+O.i+')">Try again</button><button class="btn" onclick="oh()">Other cases</button></div>'}}
-a.innerHTML=h}
-R();
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz Challenge & Leaderboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="decor decor-left" aria-hidden="true">○ ○ ○ ○ ○<br>× × × × ×</div>
+  <div class="decor decor-right" aria-hidden="true">○ ○ ○ ○<br>× × × × ×</div>
+
+  <header class="site-header">
+    <p class="eyebrow">QUIZ CHALLENGE</p>
+    <h1>Test your knowledge.</h1>
+    <p class="subtitle">Complete every section and see where you rank.</p>
+  </header>
+
+  <main class="page-wrap">
+    <section id="setup-panel" class="panel setup-panel">
+      <div class="section-heading">
+        <span class="step-number">01</span>
+        <div>
+          <h2>Enter your name</h2>
+          <p>Your scores will be added to the same leaderboard entry when you use the same name.</p>
+        </div>
+      </div>
+      <form id="start-form">
+        <label for="student-name">Student name</label>
+        <input id="student-name" name="student-name" maxlength="40" autocomplete="name"
+               placeholder="Enter your name" required>
+        <button class="primary-button" type="submit">Start quiz <span>→</span></button>
+      </form>
+      <p class="small-note">Please use the same spelling of your name every time.</p>
+    </section>
+
+    <section id="quiz-panel" class="panel hidden">
+      <div class="quiz-topline">
+        <div>
+          <p class="eyebrow">YOUR QUIZ</p>
+          <h2 id="welcome-title">Good luck!</h2>
+        </div>
+        <div class="progress-pill"><span id="answered-count">0</span> answered</div>
+      </div>
+      <div id="quiz-content"></div>
+      <div class="submit-area">
+        <p id="quiz-status" class="status-text">Answer all questions before submitting.</p>
+        <button id="submit-quiz" class="primary-button" type="button">Submit all answers <span>→</span></button>
+      </div>
+    </section>
+
+    <section id="result-panel" class="panel hidden" aria-live="polite">
+      <p class="eyebrow">QUIZ COMPLETED</p>
+      <h2>Your result</h2>
+      <div class="result-grid">
+        <div class="result-stat"><span>Your score</span><strong id="result-score">0 / 0</strong></div>
+        <div class="result-stat"><span>Your cumulative total</span><strong id="result-total">0</strong></div>
+      </div>
+      <p id="result-message" class="result-message"></p>
+      <button id="try-again" class="secondary-button" type="button">Back to leaderboard</button>
+    </section>
+
+    <section id="leaderboard-section" class="leaderboard-section">
+      <div class="leaderboard-heading">
+        <div>
+          <p class="eyebrow">THE HALL OF FAME</p>
+          <h2>Leaderboard</h2>
+          <p class="subtitle">Every completed quiz adds to the student's cumulative score.</p>
+        </div>
+        <button id="refresh-leaderboard" class="refresh-button" type="button" title="Refresh leaderboard">↻</button>
+      </div>
+      <div id="leaderboard" class="leaderboard-card">
+        <p class="loading-text">Loading leaderboard…</p>
+      </div>
+      <p class="leaderboard-footnote">Rankings are based on total accumulated points.</p>
+    </section>
+  </main>
+
+  <footer>QUIZ CHALLENGE <span>•</span> KEEP LEARNING, KEEP CLIMBING</footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
