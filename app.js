@@ -3,11 +3,11 @@
   2) Run supabase-setup.sql in Supabase SQL Editor.
   3) Paste your project URL and anon key below.
 */
-const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
-const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+const SUPABASE_URL = "https://etkwtcauijkyhqwrnwrm.supabase.co/rest/v1/";
+const SUPABASE_ANON_KEY = "sb_publishable_LWTfAB1_ld7eGVpKZ50cVg_onuPNg3w";
 
 const configured = SUPABASE_URL.startsWith("https://") &&
-  !SUPABASE_URL.includes("PASTE_") && !SUPABASE_ANON_KEY.includes("PASTE_");
+  !SUPABASE_URL.includes("https://etkwtcauijkyhqwrnwrm.supabase.co/rest/v1/") && !SUPABASE_ANON_KEY.includes("sb_publishable_LWTfAB1_ld7eGVpKZ50cVg_onuPNg3w");
 
 const db = configured
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
