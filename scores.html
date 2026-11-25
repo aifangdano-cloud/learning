@@ -4,87 +4,216 @@
 <head>
   <title>O&G Leaderboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
-    body { font-family: Arial; text-align: center; padding: 20px; background: #f5f5fa; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: #f5f5fa;
+      color: #30283a;
+    }
+
     h1 { color: #673ab7; }
-    table { margin: 20px auto; border-collapse: collapse; width: 100%; max-width: 600px; background: white; }
-    th, td { padding: 12px; border: 1px solid #ddd; }
+
+    select {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin: 10px;
+      width: 90%;
+      max-width: 300px;
+    }
+
+    #podium {
+      display: flex;
+      justify-content: center;
+      align-items: end;
+      gap: 8px;
+      max-width: 600px;
+      margin: 25px auto;
+    }
+
+    .podium-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 5px;
+      flex: 1;
+      min-width: 0;
+      box-shadow: 0 2px 6px #ddd;
+      overflow-wrap: anywhere;
+    }
+
+    .first { border-top: 6px solid #e6b422; }
+    .second { border-top: 6px solid #aaa; }
+    .third { border-top: 6px solid #bd784d; }
+
+    .medal { font-size: 30px; }
+    .player-name { font-weight: bold; margin: 8px 0; }
+    .points { color: #673ab7; font-weight: bold; }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 600px;
+      background: white;
+    }
+
+    th, td {
+      padding: 10px 5px;
+      border: 1px solid #ddd;
+    }
+
     th { background: #673ab7; color: white; }
+
+    tr.top-player { font-weight: bold; }
+
+    a { color: #673ab7; }
   </style>
 </head>
+
 <body>
+
 <h1>🏆 O&G Leaderboard</h1>
-<p>Top players by total points</p>
+<p>See who is leading!</p>
+
+<label for="category"><b>Choose ranking:</b></label>
+<br>
+
+<select id="category" onchange="loadLeaderboard()">
+  <option value="totalPoints">Overall Ranking</option>
+  <option value="obstetricsPoints">Obstetrics</option>
+  <option value="gynaecologyPoints">Gynaecology</option>
+  <option value="mixedPoints">Mixed Practice</option>
+</select>
+
+<h2>🥇 Top 3 Players</h2>
+<div id="podium">Loading...</div>
+
+<h2>📊 Full Rankings</h2>
+
 <table>
-<thead><tr><th>Rank</th><th>Name</th><th>Points</th><th>Quizzes</th></tr></thead>
-<tbody id="rankings"><tr><td colspan="4">Loading...</td></tr></tbody>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Name</th>
+      <th>Points</th>
+      <th>Quizzes</th>
+    </tr>
+  </thead>
+  <tbody id="rankings">
+    <tr><td colspan="4">Loading...</td></tr>
+  </tbody>
 </table>
+
 <p><a href="obg-elearning.html">← Back to O&G Learning</a></p>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
 <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyBwLFCZ7vJi7KPfViDNWHhVhYbgmA3VMI",
+  apiKey: "AIzaSyBwLFCzV7vJi7KPfViDNWHhVhYbgmA3VMI",
   authDomain: "obgyn-7d3ad.firebaseapp.com",
   projectId: "obgyn-7d3ad",
   storageBucket: "obgyn-7d3ad.firebasestorage.app",
   messagingSenderId: "920710361267",
   appId: "1:920710361267:web:9b4e308d986781a4d040c6"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-document.getElementById("rankings").innerHTML =
-  '<tr><td colspan="4">Connecting to Firebase...</td></tr>';
-db.collection("players").orderBy("totalPoints", "desc").limit(100).get()
 
-.then(snapshot => {
+async function loadLeaderboard() {
+  const field = document.getElementById("category").value;
   const table = document.getElementById("rankings");
-  table.innerHTML = "";
+  const podium = document.getElementById("podium");
 
-  if (snapshot.empty) {
-    table.innerHTML = '<tr><td colspan="4">No scores yet!</td></tr>';
-    return;
-  }
+  table.innerHTML = '<tr><td colspan="4">Loading rankings...</td></tr>';
+  podium.textContent = "Loading...";
 
-  let rank = 1;
+  try {
+    const snapshot = await db.collection("players")
+      .orderBy(field, "desc")
+      .limit(100)
+      .get();
 
-  snapshot.forEach((doc) => {
-    const p = doc.data();
-    const tr = document.createElement("tr");
+    table.innerHTML = "";
+    podium.innerHTML = "";
 
-    let medal = rank;
-
-    if (rank === 1) medal = "🥇 1";
-    else if (rank === 2) medal = "🥈 2";
-    else if (rank === 3) medal = "🥉 3";
-
-    if (rank <= 3) {
-      tr.style.fontWeight = "bold";
-      tr.style.background =
-        rank === 1 ? "#fff3cd" :
-        rank === 2 ? "#eeeeee" : "#fce4d6";
+    if (snapshot.empty) {
+      table.innerHTML =
+        '<tr><td colspan="4">No scores yet for this category.</td></tr>';
+      podium.textContent = "No players yet.";
+      return;
     }
 
-    [medal, p.name || "Player",
-     p.totalPoints || 0,
-     p.quizzesCompleted || 0].forEach(value => {
-      const td = document.createElement("td");
-      td.textContent = value;
-      tr.appendChild(td);
+    const players = [];
+    snapshot.forEach(doc => {
+      players.push(doc.data());
     });
 
-    table.appendChild(tr);
-    rank++;
-  });
-})
-.catch(error => {
-  document.getElementById("rankings").innerHTML =
-    '<tr><td colspan="4">' +
-    error.code + ': ' + error.message +
-    '</td></tr>';
-  console.error(error);
-});
+    const medals = ["🥇", "🥈", "🥉"];
+    const classes = ["first", "second", "third"];
+
+    players.slice(0, 3).forEach((p, i) => {
+      const card = document.createElement("div");
+      card.className = "podium-card " + classes[i];
+
+      const medal = document.createElement("div");
+      medal.className = "medal";
+      medal.textContent = medals[i];
+
+      const name = document.createElement("div");
+      name.className = "player-name";
+      name.textContent = p.name || "Player";
+
+      const points = document.createElement("div");
+      points.className = "points";
+      points.textContent = (p[field] || 0) + " points";
+
+      card.appendChild(medal);
+      card.appendChild(name);
+      card.appendChild(points);
+      podium.appendChild(card);
+    });
+
+    players.forEach((p, i) => {
+      const tr = document.createElement("tr");
+
+      if (i < 3) tr.className = "top-player";
+
+      const values = [
+        i + 1,
+        p.name || "Player",
+        p[field] || 0,
+        p.quizzesCompleted || 0
+      ];
+
+      values.forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+
+      table.appendChild(tr);
+    });
+
+  } catch (error) {
+    table.innerHTML =
+      '<tr><td colspan="4">' +
+      error.code + ": " + error.message +
+      '</td></tr>';
+
+    podium.textContent = "Could not load rankings.";
+    console.error(error);
+  }
+}
+
+loadLeaderboard();
 </script>
+
 </body>
 </html>
