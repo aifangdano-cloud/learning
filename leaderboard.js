@@ -29,7 +29,7 @@ const authReady = auth.signInAnonymously()
 // Save player name
 let playerName = null;
 let playerName = null;
-
+window.askPlayerName = askPlayerName;
 function askPlayerName() {
   if (!playerName) {
     playerName = prompt("Enter your name for the leaderboard:");
