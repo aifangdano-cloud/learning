@@ -48,7 +48,67 @@ function askPlayerName() {
 // Save completed quiz score
 let quizSaved = false;
 
+
 async function saveQuizScore() {
+  if (quizSaved || !playerName) return;
+
+  quizSaved = true;
+
+  try {
+    const signedIn = await authReady;
+
+    if (!signedIn || !auth.currentUser) {
+      throw new Error("Firebase login failed.");
+    }
+
+    const points = Number(S.sc) || 0;
+    const playerId = auth.currentUser.uid;
+    const playerRef = db.collection("players").doc(playerId);
+
+    let subjectField;
+
+    if (["hyper", "hg", "ana", "obs"].includes(S.tp)) {
+      subjectField = "obstetricsPoints";
+    } else if (["disc", "con"].includes(S.tp)) {
+      subjectField = "gynaecologyPoints";
+    } else if (S.tp === "all") {
+      subjectField = "mixedPoints";
+    }
+
+    await db.runTransaction(async transaction => {
+      const playerDoc = await transaction.get(playerRef);
+
+      const updates = {
+        name: playerName,
+        totalPoints: firebase.firestore.FieldValue.increment(points),
+        quizzesCompleted: firebase.firestore.FieldValue.increment(1)
+      };
+
+      if (subjectField) {
+        updates[subjectField] =
+          firebase.firestore.FieldValue.increment(points);
+      }
+
+      if (playerDoc.exists) {
+        transaction.update(playerRef, updates);
+      } else {
+        transaction.set(playerRef, {
+          name: playerName,
+          totalPoints: points,
+          quizzesCompleted: 1,
+          obstetricsPoints: subjectField === "obstetricsPoints" ? points : 0,
+          gynaecologyPoints: subjectField === "gynaecologyPoints" ? points : 0,
+          mixedPoints: subjectField === "mixedPoints" ? points : 0
+        });
+      }
+    });
+
+    console.log("Quiz score saved!");
+  } catch (error) {
+    quizSaved = false;
+    console.error("Could not save score:", error);
+  }
+}
   if (quizSaved || !playerName) return;
 
   quizSaved = true;
