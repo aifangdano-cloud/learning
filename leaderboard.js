@@ -15,9 +15,13 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // Sign in anonymously
-auth.signInAnonymously().catch(error => {
-  console.error("Firebase login error:", error);
-});
+auth.signInAnonymously()
+  .then(() => {
+    alert("Firebase connected successfully!");
+  })
+  .catch(error => {
+    alert("Firebase error: " + error.code + "\n" + error.message);
+  });
 
 // Save player name
 let playerName = localStorage.getItem("obgPlayerName");
