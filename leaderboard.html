@@ -1,56 +1,124 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Leaderboard</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #f4f4f4;
-            text-align: center;
-        }
+const { onCall, HttpsError } =
+  require("firebase-functions/v2/https");
 
-        table {
-            margin: 30px auto;
-            width: 80%;
-            border-collapse: collapse;
-            background: white;
-        }
+const { initializeApp } =
+  require("firebase-admin/app");
 
-        th, td {
-            padding: 15px;
-            border: 1px solid #ddd;
-        }
+const { getFirestore, FieldValue } =
+  require("firebase-admin/firestore");
 
-        th {
-            background: #333;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <h1>🏆 Leaderboard</h1>
+initializeApp();
 
-    <table>
-        <tr>
-            <th>Rank</th>
-            <th>Player</th>
-            <th>Score</th>
-        </tr>
-        <tr>
-            <td>🥇 1</td>
-            <td>Alex</td>
-            <td>100</td>
-        </tr>
-        <tr>
-            <td>🥈 2</td>
-            <td>John</td>
-            <td>85</td>
-        </tr>
-        <tr>
-            <td>🥉 3</td>
-            <td>Mary</td>
-            <td>70</td>
-        </tr>
-    </table>
-</body>
-</html>
+const db = getFirestore();
+
+// Example quiz answer key.
+// Replace these questions with your actual O&G quiz questions.
+const QUIZZES = {
+  "case-001": {
+    questions: {
+      q1: { answer: "A", points: 10 },
+      q2: { answer: "B", points: 10 },
+      q3: { answer: "C", points: 20 }
+    }
+  }
+};
+
+exports.submitQuiz = onCall(async (request) => {
+
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "Please sign in first."
+    );
+  }
+
+  const { quizId, answers } = request.data || {};
+
+  const quiz = QUIZZES[quizId];
+
+  if (!quiz || !answers || typeof answers !== "object" ||
+      Array.isArray(answers)) {
+    throw new HttpsError(
+      "invalid-argument",
+      "Invalid quiz submission."
+    );
+  }
+
+  const questions = quiz.questions;
+  const questionIds = Object.keys(questions);
+
+  if (
+    Object.keys(answers).length !== questionIds.length ||
+    questionIds.some(id => typeof answers[id] !== "string")
+  ) {
+    throw new HttpsError(
+      "invalid-argument",
+      "Please submit all quiz answers."
+    );
+  }
+
+  // Calculate score on the server.
+  let earnedPoints = 0;
+
+  for (const id of questionIds) {
+    if (answers[id] === questions[id].answer) {
+      earnedPoints += questions[id].points;
+    }
+  }
+
+  const uid = request.auth.uid;
+
+  const displayName = String(
+    request.auth.token.name ||
+    request.auth.token.email?.split("@")[0] ||
+    "Learner"
+  ).slice(0, 40);
+
+  const scoreRef = db.collection("leaderboard").doc(uid);
+
+  // One counted attempt per quiz per student.
+  const attemptRef = db.collection("users")
+    .doc(uid)
+    .collection("attempts")
+    .doc(quizId);
+
+  const result = await db.runTransaction(async (tx) => {
+
+    const attempt = await tx.get(attemptRef);
+    const score = await tx.get(scoreRef);
+
+    if (attempt.exists) {
+      return {
+        duplicate: true,
+        message: "This quiz has already been counted."
+      };
+    }
+
+    const previousPoints = score.exists
+      ? Number(score.data().points || 0)
+      : 0;
+
+    const totalPoints = previousPoints + earnedPoints;
+
+    tx.create(attemptRef, {
+      quizId,
+      points: earnedPoints,
+      createdAt: FieldValue.serverTimestamp()
+    });
+
+    tx.set(scoreRef, {
+      uid,
+      displayName,
+      points: totalPoints,
+      updatedAt: FieldValue.serverTimestamp()
+    });
+
+    return {
+      duplicate: false,
+      earnedPoints,
+      totalPoints
+    };
+  });
+
+  return result;
+});
