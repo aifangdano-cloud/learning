@@ -44,11 +44,10 @@ db.collection("players").orderBy("totalPoints", "desc").limit(100).get()
     table.innerHTML = '<tr><td colspan="4">No scores yet!</td></tr>';
     return;
   }
-  snapshot.forEach((doc, i) => {
-    const p = doc.data();
+let rank = 1;
+snapshot.forEach((doc) => {    const p = doc.data();
     const tr = document.createElement("tr");
-    [i + 1, p.name || "Player", p.totalPoints || 0, p.quizzesCompleted || 0]
-      .forEach(value => {
+[rank++, p.name || "Player", p.totalPoints || 0, p.quizzesCompleted || 0]      .forEach(value => {
         const td = document.createElement("td");
         td.textContent = value;
         tr.appendChild(td);
