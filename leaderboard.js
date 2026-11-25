@@ -1,3 +1,4 @@
+alert("LEADERBOARD.JS IS RUNNING!");
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBwLFCZ7vJi7KPfViDNWHHhVYbgmA3VMI",
