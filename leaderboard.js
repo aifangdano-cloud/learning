@@ -27,8 +27,7 @@ const authReady = auth.signInAnonymously()
   });
 
 // Save player name
-let playerName = localStorage.getItem("obgPlayerName");
-
+let playerName = null;
 function askPlayerName() {
   if (!playerName) {
     playerName = prompt("Enter your name for the leaderboard:");
