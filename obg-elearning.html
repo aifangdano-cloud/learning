@@ -327,3 +327,22 @@ h+='<div class="card"><b>'+(O.opts[O.pk][1]?"✅ Correct":"❌ Not quite")+'</b>
 a.innerHTML=h}
 R();
 </script></body></html>
+// Connect name entry and score saving to the quiz
+const originalStart = window.start;
+
+window.start = function(tp) {
+  if (!askPlayerName()) return;
+
+  quizSaved = false;
+  originalStart(tp);
+};
+
+const originalRender = window.R;
+
+window.R = function() {
+  originalRender();
+
+  if (window.S && S.v === "end") {
+    saveQuizScore();
+  }
+};
