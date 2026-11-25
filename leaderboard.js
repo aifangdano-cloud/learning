@@ -1,18 +1,7 @@
-if (typeof firebase === "undefined") {
-  alert("Firebase library NOT loaded!");
-} else {
-  alert("Firebase library loaded!");
-}
-// Firebase configuration
-alert("Checking Firebase...");
 
-if (typeof firebase === "undefined") {
-  alert("Firebase library is NOT loaded!");
-} else {
-  alert("Firebase library is loaded!");
-}
+// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBwLFCZ7vJi7KPfViDNWHHhVYbgmA3VMI",
+  apiKey: "AIzaSyBwLFCzV7vJi7KPfViDNWHhVhYbgmA3VMI",
   authDomain: "obgyn-7d3ad.firebaseapp.com",
   projectId: "obgyn-7d3ad",
   storageBucket: "obgyn-7d3ad.firebasestorage.app",
@@ -27,18 +16,14 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // Sign in anonymously
-auth.signInAnonymously()
+const authReady = auth.signInAnonymously()
   .then(() => {
-    alert("FIREBASE LOGIN SUCCESS!");
+    console.log("Firebase login successful!");
+    return true;
   })
   .catch(error => {
-    alert("LOGIN ERROR: " + error.code + " - " + error.message);
-  });
-  .then(() => {
-    alert("Firebase connected successfully!");
-  })
-  .catch(error => {
-    alert("Firebase error: " + error.code + "\n" + error.message);
+    console.error("Firebase login error:", error);
+    return false;
   });
 
 // Save player name
@@ -50,6 +35,7 @@ function askPlayerName() {
 
     if (!playerName || !playerName.trim()) {
       alert("Please enter your name before starting.");
+      playerName = null;
       return false;
     }
 
@@ -64,15 +50,21 @@ function askPlayerName() {
 let quizSaved = false;
 
 async function saveQuizScore() {
-  if (quizSaved || !playerName || !auth.currentUser) return;
+  if (quizSaved || !playerName) return;
 
   quizSaved = true;
 
-  const points = Number(S.sc) || 0;
-  const playerId = auth.currentUser.uid;
-  const playerRef = db.collection("players").doc(playerId);
-
   try {
+    const signedIn = await authReady;
+
+    if (!signedIn || !auth.currentUser) {
+      throw new Error("Firebase login failed.");
+    }
+
+    const points = Number(S.sc) || 0;
+    const playerId = auth.currentUser.uid;
+    const playerRef = db.collection("players").doc(playerId);
+
     await db.runTransaction(async transaction => {
       const playerDoc = await transaction.get(playerRef);
 
@@ -97,7 +89,8 @@ async function saveQuizScore() {
     console.error("Could not save score:", error);
   }
 }
-// Connect name entry and score saving to the quiz
+
+// Connect name entry to quiz start
 const originalStart = window.start;
 
 window.start = function(tp) {
@@ -107,12 +100,14 @@ window.start = function(tp) {
   originalStart(tp);
 };
 
+// Connect score saving to quiz results
 const originalRender = window.R;
 
 window.R = function() {
   originalRender();
 
-  if (window.S && S.v === "end") {
+  if (window.S && window.S.v === "end") {
     saveQuizScore();
   }
 };
+
