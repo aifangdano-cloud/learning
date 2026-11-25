@@ -57,9 +57,8 @@ db.collection("players").orderBy("totalPoints", "desc").limit(100).get()
 })
 .catch(error => {
   document.getElementById("rankings").innerHTML =
-    '<tr><td colspan="4">Error loading scores. Check Firebase.</td></tr>';
+    '<tr><td colspan="4">' +
+    error.code + ': ' + error.message +
+    '</td></tr>';
   console.error(error);
 });
-</script>
-</body>
-</html>
