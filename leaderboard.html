@@ -1,124 +1,102 @@
-const { onCall, HttpsError } =
-  require("firebase-functions/v2/https");
-
-const { initializeApp } =
-  require("firebase-admin/app");
-
-const { getFirestore, FieldValue } =
-  require("firebase-admin/firestore");
-
-initializeApp();
-
-const db = getFirestore();
-
-// Example quiz answer key.
-// Replace these questions with your actual O&G quiz questions.
-const QUIZZES = {
-  "case-001": {
-    questions: {
-      q1: { answer: "A", points: 10 },
-      q2: { answer: "B", points: 10 },
-      q3: { answer: "C", points: 20 }
+<!DOCTYPE html>
+<html>
+<head>
+  <title>O&G Leaderboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5fa;
+      padding: 20px;
+      text-align: center;
     }
-  }
+    h1 { color: #673ab7; }
+    table {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+    th { background: #673ab7; color: white; }
+    a { color: #673ab7; }
+  </style>
+</head>
+<body>
+
+<h1>🏆 O&G Leaderboard</h1>
+<p>Top players ranked by total points</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Name</th>
+      <th>Points</th>
+      <th>Quizzes</th>
+    </tr>
+  </thead>
+  <tbody id="rankings">
+    <tr><td colspan="4">Loading...</td></tr>
+  </tbody>
+</table>
+
+<p><a href="obg-elearning.html">← Back to O&G Learning</a></p>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBwLFCZ7vJi7KPfViDNWHHhVYbgmA3VMI",
+  authDomain: "obgyn-7d3ad.firebaseapp.com",
+  projectId: "obgyn-7d3ad",
+  storageBucket: "obgyn-7d3ad.firebasestorage.app",
+  messagingSenderId: "920710361267",
+  appId: "1:920710361267:web:9b4e308d986781a4d040c6"
 };
 
-exports.submitQuiz = onCall(async (request) => {
+firebase.initializeApp(firebaseConfig);
 
-  if (!request.auth) {
-    throw new HttpsError(
-      "unauthenticated",
-      "Please sign in first."
-    );
-  }
+const db = firebase.firestore();
 
-  const { quizId, answers } = request.data || {};
+db.collection("players")
+  .orderBy("totalPoints", "desc")
+  .limit(100)
+  .get()
+  .then(snapshot => {
+    const table = document.getElementById("rankings");
+    table.innerHTML = "";
 
-  const quiz = QUIZZES[quizId];
-
-  if (!quiz || !answers || typeof answers !== "object" ||
-      Array.isArray(answers)) {
-    throw new HttpsError(
-      "invalid-argument",
-      "Invalid quiz submission."
-    );
-  }
-
-  const questions = quiz.questions;
-  const questionIds = Object.keys(questions);
-
-  if (
-    Object.keys(answers).length !== questionIds.length ||
-    questionIds.some(id => typeof answers[id] !== "string")
-  ) {
-    throw new HttpsError(
-      "invalid-argument",
-      "Please submit all quiz answers."
-    );
-  }
-
-  // Calculate score on the server.
-  let earnedPoints = 0;
-
-  for (const id of questionIds) {
-    if (answers[id] === questions[id].answer) {
-      earnedPoints += questions[id].points;
-    }
-  }
-
-  const uid = request.auth.uid;
-
-  const displayName = String(
-    request.auth.token.name ||
-    request.auth.token.email?.split("@")[0] ||
-    "Learner"
-  ).slice(0, 40);
-
-  const scoreRef = db.collection("leaderboard").doc(uid);
-
-  // One counted attempt per quiz per student.
-  const attemptRef = db.collection("users")
-    .doc(uid)
-    .collection("attempts")
-    .doc(quizId);
-
-  const result = await db.runTransaction(async (tx) => {
-
-    const attempt = await tx.get(attemptRef);
-    const score = await tx.get(scoreRef);
-
-    if (attempt.exists) {
-      return {
-        duplicate: true,
-        message: "This quiz has already been counted."
-      };
+    if (snapshot.empty) {
+      table.innerHTML =
+        '<tr><td colspan="4">No scores yet. Be the first!</td></tr>';
+      return;
     }
 
-    const previousPoints = score.exists
-      ? Number(score.data().points || 0)
-      : 0;
-
-    const totalPoints = previousPoints + earnedPoints;
-
-    tx.create(attemptRef, {
-      quizId,
-      points: earnedPoints,
-      createdAt: FieldValue.serverTimestamp()
+    snapshot.forEach((doc, index) => {
+      const player = doc.data();
+      table.innerHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td></td>
+          <td>${Number(player.totalPoints) || 0}</td>
+          <td>${Number(player.quizzesCompleted) || 0}</td>
+        </tr>`;
+      table.lastElementChild.children[1].textContent =
+        player.name || "Player";
     });
-
-    tx.set(scoreRef, {
-      uid,
-      displayName,
-      points: totalPoints,
-      updatedAt: FieldValue.serverTimestamp()
-    });
-
-    return {
-      duplicate: false,
-      earnedPoints,
-      totalPoints
-    };
+  })
+  .catch(error => {
+    document.getElementById("rankings").innerHTML =
+      '<tr><td colspan="4">Unable to load leaderboard. Please try again.</td></tr>';
+    console.error(error);
   });
+</script>
 
-  return result;
-});
+</body>
+</html>
