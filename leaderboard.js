@@ -93,17 +93,13 @@ async function saveQuizScore() {
 
 // Connect name entry to quiz start
 const originalStart = window.start;
-alert("START FUNCTION: " + typeof window.start);
-if (typeof originalStart === "function") {
-  window.start = function(tp) {
-    if (!askPlayerName()) return;
 
-    quizSaved = false;
-    originalStart(tp);
-  };
-} else {
-  alert("Quiz start function not found!");
-}
+window.start = function(tp) {
+  if (!askPlayerName()) return;
+
+  quizSaved = false;
+  originalStart(tp);
+};
 
 // Connect score saving to quiz results
 const originalRender = window.R;
@@ -114,13 +110,4 @@ window.R = function() {
   if (window.S && window.S.v === "end") {
     saveQuizScore();
   }
-};
-// Connect name prompt to quiz Start button
-const originalStart = window.start;
-
-window.start = function(tp) {
-  if (!askPlayerName()) return;
-
-  quizSaved = false;
-  originalStart(tp);
 };
