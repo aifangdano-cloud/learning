@@ -308,6 +308,30 @@ take:"Headache, visual disturbance and epigastric pain late in pregnancy: measur
 dx:{q:"Best advice?",o:[["Avoid the combined pill; offer progestin-only or non-hormonal options",1,"Migraine with aura plus oestrogen raises stroke risk, so combined methods are contraindicated."],["Start the combined pill",0,"It is contraindicated with migraine with aura."],["Start the pill with low-dose aspirin",0,"Aspirin does not make it safe."],["No contraception is needed",0,"She requested contraception and is at risk of pregnancy."]]},
 take:"Always screen for contraindications before prescribing: migraine with aura, smoking, BP, VTE, breastfeeding, drug interactions."}];
 var O={i:0,asked:[],left:0,pk:null,opts:[]};
+  function start(tp) {
+  if (typeof window.askPlayerName !== "function") {
+    alert("Name system not loaded. Please check leaderboard.js");
+    return;
+  }
+
+  if (!window.askPlayerName()) return;
+
+  quizSaved = false;
+  S.tp = tp;
+  S.q = shuf(CASES.filter(function(c) {
+    return tp == "all" || c.t == tp;
+  }));
+
+  S.ci = 0;
+  S.si = 0;
+  S.sc = 0;
+  S.st = 0;
+  S.ok = 0;
+  S.n = 0;
+
+  load();
+  go("play");
+}
 function oh(){S.v="oh";RO();window.scrollTo(0,0)}
 function os(i){O={i:i,asked:[],left:OS[i].lim,pk:null,opts:shuf(OS[i].dx.o)};S.v="op";RO();window.scrollTo(0,0)}
 function oa(k){if(O.left<1||O.asked.indexOf(k)>=0)return;O.asked.push(k);O.left--;RO()}
