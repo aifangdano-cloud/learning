@@ -37,51 +37,48 @@ const db = firebase.firestore();
 document.getElementById("rankings").innerHTML =
   '<tr><td colspan="4">Connecting to Firebase...</td></tr>';
 db.collection("players").orderBy("totalPoints", "desc").limit(100).get()
+
 .then(snapshot => {
   const table = document.getElementById("rankings");
   table.innerHTML = "";
+
   if (snapshot.empty) {
     table.innerHTML = '<tr><td colspan="4">No scores yet!</td></tr>';
     return;
   }
-let rank = 1;
 
-let rank = 1;
+  let rank = 1;
 
-snapshot.forEach((doc) => {
-  const p = doc.data();
-  const tr = document.createElement("tr");
-
-  let medal = rank;
-  if (rank === 1) medal = "🥇 1";
-  else if (rank === 2) medal = "🥈 2";
-  else if (rank === 3) medal = "🥉 3";
-
-  if (rank <= 3) {
-    tr.style.fontWeight = "bold";
-    tr.style.background = rank === 1 ? "#fff3cd" :
-                          rank === 2 ? "#eeeeee" : "#fce4d6";
-  }
-
-  [medal, p.name || "Player", p.totalPoints || 0,
-   p.quizzesCompleted || 0].forEach(value => {
-    const td = document.createElement("td");
-    td.textContent = value;
-    tr.appendChild(td);
-  });
-
-  table.appendChild(tr);
-  rank++;
-});
+  snapshot.forEach((doc) => {
+    const p = doc.data();
     const tr = document.createElement("tr");
-[rank++, p.name || "Player", p.totalPoints || 0, p.quizzesCompleted || 0]      .forEach(value => {
-        const td = document.createElement("td");
-        td.textContent = value;
-        tr.appendChild(td);
-      });
+
+    let medal = rank;
+
+    if (rank === 1) medal = "🥇 1";
+    else if (rank === 2) medal = "🥈 2";
+    else if (rank === 3) medal = "🥉 3";
+
+    if (rank <= 3) {
+      tr.style.fontWeight = "bold";
+      tr.style.background =
+        rank === 1 ? "#fff3cd" :
+        rank === 2 ? "#eeeeee" : "#fce4d6";
+    }
+
+    [medal, p.name || "Player",
+     p.totalPoints || 0,
+     p.quizzesCompleted || 0].forEach(value => {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.appendChild(td);
+    });
+
     table.appendChild(tr);
+    rank++;
   });
 })
+
 .catch(error => {
   document.getElementById("rankings").innerHTML =
     '<tr><td colspan="4">' +
