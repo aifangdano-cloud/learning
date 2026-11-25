@@ -28,6 +28,8 @@ const authReady = auth.signInAnonymously()
 
 // Save player name
 let playerName = null;
+let playerName = null;
+
 function askPlayerName() {
   if (!playerName) {
     playerName = prompt("Enter your name for the leaderboard:");
@@ -44,6 +46,8 @@ function askPlayerName() {
 
   return true;
 }
+
+window.askPlayerName = askPlayerName;
 
 // Save completed quiz score
 let quizSaved = false;
