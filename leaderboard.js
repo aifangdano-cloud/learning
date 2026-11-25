@@ -13,6 +13,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
+alert("LEADERBOARD SCRIPT REACHED THIS POINT!");
 const db = firebase.firestore();
 
 // Sign in anonymously
