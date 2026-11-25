@@ -326,4 +326,63 @@ if(d){var tot=0,got=0,miss='';for(k=0;k<c.qs.length;k++)if(c.qs[k][3]){tot++;if(
 h+='<div class="card"><b>'+(O.opts[O.pk][1]?"✅ Correct":"❌ Not quite")+'</b><p class="fb">'+O.opts[O.pk][2]+'</p><p><b>Key questions asked:</b> '+got+' of '+tot+'</p>'+(miss?'<p><b>You missed:</b></p><ul>'+miss+'</ul>':'<p>You covered every key question. 🎉</p>')+'<p><b>Take-home:</b> '+c.take+'</p><button class="btn main" onclick="os('+O.i+')">Try again</button><button class="btn" onclick="oh()">Other cases</button></div>'}}
 a.innerHTML=h}
 R();
-</script></body></html>
+["Gynaecological","Are your periods regular?","Yes.",0],
+["Contraception","Have you used contraception before?","Condoms only.",0],
+["Past/Family","Any family history of breast cancer?","No.",0],
+["Social","What do you do for work?","I am a teacher.",0],
+["Social","How tall are you?","About 165 cm.",0]],
+dx:{q:"Best advice?",o:[["Avoid the combined pill; offer progestin-only or non-hormonal options",1,"Migraine with aura plus oestrogen raises stroke risk, so combined methods are contraindicated."],["Start the combined pill",0,"It is contraindicated with migraine with aura."],["Start the pill with low-dose aspirin",0,"Aspirin does not make it safe."],["No contraception is needed",0,"She requested contraception and is at risk of pregnancy."]]},
+take:"Always screen for contraindications before prescribing: migraine with aura, smoking, BP, VTE, breastfeeding, drug interactions."}];
+var O={i:0,asked:[],left:0,pk:null,opts:[]};
+function oh(){S.v="oh";RO();window.scrollTo(0,0)}
+function os(i){O={i:i,asked:[],left:OS[i].lim,pk:null,opts:shuf(OS[i].dx.o)};S.v="op";RO();window.scrollTo(0,0)}
+function oa(k){if(O.left<1||O.asked.indexOf(k)>=0)return;O.asked.push(k);O.left--;RO()}
+function od(){S.v="od";RO();window.scrollTo(0,0)}
+function odp(i){if(O.pk!==null)return;O.pk=i;RO()}
+function RO(){var a=document.getElementById("app"),h="",c=OS[O.i],k,i;
+if(S.v=="oh"){h='<button class="back" onclick="go(\'home\')">← Back</button><h1>🗣️ History-taking (OSCE)</h1><p class="mu">You have a limited number of questions. Ask the ones that matter, then give your diagnosis or advice.</p>';for(i=0;i<OS.length;i++)h+='<button class="btn" onclick="os('+i+')"><b>'+OS[i].title+'</b><br><span class="mu">'+OS[i].tag+'</span></button>'}
+else if(S.v=="op"){h='<div class="top"><button class="back" onclick="oh()">← Exit</button><span>Questions left: '+O.left+'</span></div><div class="card"><h2>'+c.title+'</h2><p>'+c.intro+'</p></div>';
+for(i=0;i<O.asked.length;i++){k=O.asked[i];h+='<div class="card"><b>You:</b> '+c.qs[k][1]+'<p class="fb"><b>Patient:</b> '+c.qs[k][2]+'</p></div>'}
+if(O.left>0){var seen=[];for(k=0;k<c.qs.length;k++){var ct=c.qs[k][0];if(seen.indexOf(ct)<0){seen.push(ct);var part='';for(var m=0;m<c.qs.length;m++)if(c.qs[m][0]==ct&&O.asked.indexOf(m)<0)part+='<button class="btn" onclick="oa('+m+')">'+c.qs[m][1]+'</button>';if(part)h+='<p class="mu"><b>'+ct+'</b></p>'+part}}}else h+='<p class="mu">No questions left.</p>';
+h+='<button class="btn main" onclick="od()">Give diagnosis / advice</button>'}
+else{var d=O.pk!==null;h='<button class="back" onclick="oh()">← Exit</button><div class="card"><h2>'+c.title+'</h2></div><h2>'+c.dx.q+'</h2>';
+for(i=0;i<O.opts.length;i++){var cl="btn";if(d){if(O.opts[i][1])cl+=" ok";else if(i==O.pk)cl+=" bad"}h+='<button class="'+cl+'" onclick="odp('+i+')">'+O.opts[i][0]+'</button>'}
+if(d){var tot=0,got=0,miss='';for(k=0;k<c.qs.length;k++)if(c.qs[k][3]){tot++;if(O.asked.indexOf(k)>=0)got++;else miss+='<li><b>'+c.qs[k][1]+'</b> → '+c.qs[k][2]+'</li>'}
+h+='<div class="card"><b>'+(O.opts[O.pk][1]?"✅ Correct":"❌ Not quite")+'</b><p class="fb">'+O.opts[O.pk][2]+'</p><p><b>Key questions asked:</b> '+got+' of '+tot+'</p>'+(miss?'<p><b>You missed:</b></p><ul>'+miss+'</ul>':'<p>You covered every key question. 🎉</p>')+'<p><b>Take-home:</b> '+c.take+'</p><button class="btn main" onclick="os('+O.i+')">Try again</button><button class="btn" onclick="oh()">Other cases</button></div>'}}
+a.innerHTML=h}
+R();
+["Gynaecological","Are your periods regular?","Yes.",0],
+["Contraception","Have you used contraception before?","Condoms only.",0],
+["Past/Family","Any family history of breast cancer?","No.",0],
+["Social","What do you do for work?","I am a teacher.",0],
+["Social","How tall are you?","About 165 cm.",0]],
+dx:{q:"Best advice?",o:[["Avoid the combined pill; offer progestin-only or non-hormonal options",1,"Migraine with aura plus oestrogen raises stroke risk, so combined methods are contraindicated."],["Start the combined pill",0,"It is contraindicated with migraine with aura."],["Start the pill with low-dose aspirin",0,"Aspirin does not make it safe."],["No contraception is needed",0,"She requested contraception and is at risk of pregnancy."]]},
+take:"Always screen for contraindications before prescribing: migraine with aura, smoking, BP, VTE, breastfeeding, drug interactions."}];
+var O={i:0,asked:[],left:0,pk:null,opts:[]};
+function oh(){S.v="oh";RO();window.scrollTo(0,0)}
+function os(i){O={i:i,asked:[],left:OS[i].lim,pk:null,opts:shuf(OS[i].dx.o)};S.v="op";RO();window.scrollTo(0,0)}
+function oa(k){if(O.left<1||O.asked.indexOf(k)>=0)return;O.asked.push(k);O.left--;RO()}
+function od(){S.v="od";RO();window.scrollTo(0,0)}
+function odp(i){if(O.pk!==null)return;O.pk=i;RO()}
+function RO(){var a=document.getElementById("app"),h="",c=OS[O.i],k,i;
+if(S.v=="oh"){h='<button class="back" onclick="go(\'home\')">← Back</button><h1>🗣️ History-taking (OSCE)</h1><p class="mu">You have a limited number of questions. Ask the ones that matter, then give your diagnosis or advice.</p>';for(i=0;i<OS.length;i++)h+='<button class="btn" onclick="os('+i+')"><b>'+OS[i].title+'</b><br><span class="mu">'+OS[i].tag+'</span></button>'}
+else if(S.v=="op"){h='<div class="top"><button class="back" onclick="oh()">← Exit</button><span>Questions left: '+O.left+'</span></div><div class="card"><h2>'+c.title+'</h2><p>'+c.intro+'</p></div>';
+for(i=0;i<O.asked.length;i++){k=O.asked[i];h+='<div class="card"><b>You:</b> '+c.qs[k][1]+'<p class="fb"><b>Patient:</b> '+c.qs[k][2]+'</p></div>'}
+if(O.left>0){var seen=[];for(k=0;k<c.qs.length;k++){var ct=c.qs[k][0];if(seen.indexOf(ct)<0){seen.push(ct);var part='';for(var m=0;m<c.qs.length;m++)if(c.qs[m][0]==ct&&O.asked.indexOf(m)<0)part+='<button class="btn" onclick="oa('+m+')">'+c.qs[m][1]+'</button>';if(part)h+='<p class="mu"><b>'+ct+'</b></p>'+part}}}else h+='<p class="mu">No questions left.</p>';
+h+='<button class="btn main" onclick="od()">Give diagnosis / advice</button>'}
+else{var d=O.pk!==null;h='<button class="back" onclick="oh()">← Exit</button><div class="card"><h2>'+c.title+'</h2></div><h2>'+c.dx.q+'</h2>';
+for(i=0;i<O.opts.length;i++){var cl="btn";if(d){if(O.opts[i][1])cl+=" ok";else if(i==O.pk)cl+=" bad"}h+='<button class="'+cl+'" onclick="odp('+i+')">'+O.opts[i][0]+'</button>'}
+if(d){var tot=0,got=0,miss='';for(k=0;k<c.qs.length;k++)if(c.qs[k][3]){tot++;if(O.asked.indexOf(k)>=0)got++;else miss+='<li><b>'+c.qs[k][1]+'</b> → '+c.qs[k][2]+'</li>'}
+h+='<div class="card"><b>'+(O.opts[O.pk][1]?"✅ Correct":"❌ Not quite")+'</b><p class="fb">'+O.opts[O.pk][2]+'</p><p><b>Key questions asked:</b> '+got+' of '+tot+'</p>'+(miss?'<p><b>You missed:</b></p><ul>'+miss+'</ul>':'<p>You covered every key question. 🎉</p>')+'<p><b>Take-home:</b> '+c.take+'</p><button class="btn main" onclick="os('+O.i+')">Try again</button><button class="btn" onclick="oh()">Other cases</button></div>'}}
+a.innerHTML=h}
+R();
+R();
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="leaderboard.js?v=99"></script>
+
+</body>
+</html>
