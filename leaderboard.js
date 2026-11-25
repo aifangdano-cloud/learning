@@ -1,5 +1,12 @@
 alert("LEADERBOARD.JS IS RUNNING!");
 // Firebase configuration
+alert("Checking Firebase...");
+
+if (typeof firebase === "undefined") {
+  alert("Firebase library is NOT loaded!");
+} else {
+  alert("Firebase library is loaded!");
+}
 const firebaseConfig = {
   apiKey: "AIzaSyBwLFCZ7vJi7KPfViDNWHHhVYbgmA3VMI",
   authDomain: "obgyn-7d3ad.firebaseapp.com",
