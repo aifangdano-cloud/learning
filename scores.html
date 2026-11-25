@@ -78,7 +78,6 @@ db.collection("players").orderBy("totalPoints", "desc").limit(100).get()
     rank++;
   });
 })
-
 .catch(error => {
   document.getElementById("rankings").innerHTML =
     '<tr><td colspan="4">' +
