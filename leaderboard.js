@@ -1,6 +1,5 @@
 
 // Firebase configuration
-alert("LEADERBOARD FILE LOADED");
 const firebaseConfig = {
   apiKey: "AIzaSyBwLFCzV7vJi7KPfViDNWHhVhYbgmA3VMI",
   authDomain: "obgyn-7d3ad.firebaseapp.com",
