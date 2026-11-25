@@ -243,8 +243,12 @@ var S={v:"home",tp:"",q:[],ci:0,si:0,sc:0,st:0,ok:0,n:0,opts:[],pk:null};
 function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
 function go(v,tp){S.v=v;if(tp)S.tp=tp;R();window.scrollTo(0,0)}
 function start(tp){
-if (typeof askPlayerName === "function" && !askPlayerName()) return;
-  quizSaved = false;
+if (typeof askPlayerName !== "function") {
+  alert("Name system not loaded. Please check leaderboard.js");
+  return;
+}
+
+if (!askPlayerName()) return;  quizSaved = false;
   S.tp=tp;
   S.q=shuf(CASES.filter(function(c){return tp=="all"||c.t==tp}));
   S.ci=0;
