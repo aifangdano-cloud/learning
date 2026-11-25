@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>O&G Leaderboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; text-align: center; padding: 20px; background: #f5f5fa; }
+    h1 { color: #673ab7; }
+    table { margin: 20px auto; border-collapse: collapse; width: 100%; max-width: 600px; background: white; }
+    th, td { padding: 12px; border: 1px solid #ddd; }
+    th { background: #673ab7; color: white; }
+  </style>
+</head>
+<body>
+<h1>🏆 O&G Leaderboard</h1>
+<p>Top players by total points</p>
+<table>
+<thead><tr><th>Rank</th><th>Name</th><th>Points</th><th>Quizzes</th></tr></thead>
+<tbody id="rankings"><tr><td colspan="4">Loading...</td></tr></tbody>
+</table>
+<p><a href="obg-elearning.html">← Back to O&G Learning</a></p>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBwLFCZ7vJi7KPfViDNWHHhVYbgmA3VMI",
+  authDomain: "obgyn-7d3ad.firebaseapp.com",
+  projectId: "obgyn-7d3ad",
+  storageBucket: "obgyn-7d3ad.firebasestorage.app",
+  messagingSenderId: "920710361267",
+  appId: "1:920710361267:web:9b4e308d986781a4d040c6"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+db.collection("players").orderBy("totalPoints", "desc").limit(100).get()
+.then(snapshot => {
+  const table = document.getElementById("rankings");
+  table.innerHTML = "";
+  if (snapshot.empty) {
+    table.innerHTML = '<tr><td colspan="4">No scores yet!</td></tr>';
+    return;
+  }
+  snapshot.forEach((doc, i) => {
+    const p = doc.data();
+    const tr = document.createElement("tr");
+    [i + 1, p.name || "Player", p.totalPoints || 0, p.quizzesCompleted || 0]
+      .forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+    table.appendChild(tr);
+  });
+})
+.catch(error => {
+  document.getElementById("rankings").innerHTML =
+    '<tr><td colspan="4">Error loading scores. Check Firebase.</td></tr>';
+  console.error(error);
+});
+</script>
+</body>
+</html>
