@@ -93,7 +93,7 @@ async function saveQuizScore() {
 
 // Connect name entry to quiz start
 const originalStart = window.start;
-
+alert("START FUNCTION: " + typeof window.start);
 if (typeof originalStart === "function") {
   window.start = function(tp) {
     if (!askPlayerName()) return;
