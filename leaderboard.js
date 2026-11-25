@@ -115,4 +115,12 @@ window.R = function() {
     saveQuizScore();
   }
 };
+// Connect name prompt to quiz Start button
+const originalStart = window.start;
 
+window.start = function(tp) {
+  if (!askPlayerName()) return;
+
+  quizSaved = false;
+  originalStart(tp);
+};
