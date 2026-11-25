@@ -250,8 +250,13 @@ function start(tp) {
     return;
   }
 
-  if (!window.askPlayerName()) return;
+alert("Checking name system");
 
+var result = window.askPlayerName();
+
+alert("Name result: " + result);
+
+if (!result) return;
   quizSaved = false;
 
   S.tp = tp;
