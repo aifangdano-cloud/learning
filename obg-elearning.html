@@ -255,7 +255,8 @@ if (typeof askPlayerName === "function" && !askPlayerName()) return;
   S.n=0;
   load();
   go("play");
-}function load(){S.pk=null;S.opts=shuf(CASES[CASES.indexOf(S.q[S.ci])].steps[S.si].o)}
+}
+function load(){S.pk=null;S.opts=shuf(CASES[CASES.indexOf(S.q[S.ci])].steps[S.si].o)}
 function pick(i){if(S.pk!==null)return;S.pk=i;S.n++;if(S.opts[i][1]){S.ok++;S.sc+=10+Math.min(S.st,5)*2;S.st++}else S.st=0;R()}
 function nxt(){var c=S.q[S.ci];if(S.si<c.steps.length-1){S.si++}else{S.ci++;S.si=0}if(S.ci>=S.q.length){go("end");return}load();R();window.scrollTo(0,0)}
 function R(){if(S.v=="oh"||S.v=="op"||S.v=="od"){RO();return}var a=document.getElementById("app"),h="";
