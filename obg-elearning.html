@@ -249,7 +249,7 @@ function start(tp){
     return;
   }
 
-  if (!window.askPlayerName()) return;
+ if (typeof window.askPlayerName !== "function") {
 
   window.quizSaved = false;
   quizSaved = false;
@@ -268,7 +268,7 @@ function start(tp){
   go("play");
 }
 
-if (!askPlayerName()) return;  quizSaved = false;
+if (!window.askPlayerName()) return;  quizSaved = false;
   S.tp=tp;
   S.q=shuf(CASES.filter(function(c){return tp=="all"||c.t==tp}));
   S.ci=0;
