@@ -29,6 +29,12 @@ const db = firebase.firestore();
 // Sign in anonymously
 auth.signInAnonymously()
   .then(() => {
+    alert("FIREBASE LOGIN SUCCESS!");
+  })
+  .catch(error => {
+    alert("LOGIN ERROR: " + error.code + " - " + error.message);
+  });
+  .then(() => {
     alert("Firebase connected successfully!");
   })
   .catch(error => {
