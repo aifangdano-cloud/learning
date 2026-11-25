@@ -1,4 +1,8 @@
-alert("LEADERBOARD.JS IS RUNNING!");
+if (typeof firebase === "undefined") {
+  alert("Firebase library NOT loaded!");
+} else {
+  alert("Firebase library loaded!");
+}
 // Firebase configuration
 alert("Checking Firebase...");
 
