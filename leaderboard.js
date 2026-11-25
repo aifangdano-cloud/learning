@@ -75,3 +75,22 @@ async function saveQuizScore() {
     console.error("Could not save score:", error);
   }
 }
+// Connect name entry and score saving to the quiz
+const originalStart = window.start;
+
+window.start = function(tp) {
+  if (!askPlayerName()) return;
+
+  quizSaved = false;
+  originalStart(tp);
+};
+
+const originalRender = window.R;
+
+window.R = function() {
+  originalRender();
+
+  if (window.S && S.v === "end") {
+    saveQuizScore();
+  }
+};
