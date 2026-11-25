@@ -1,4 +1,5 @@
 
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBwLFCzV7vJi7KPfViDNWHhVhYbgmA3VMI",
@@ -27,8 +28,8 @@ const authReady = auth.signInAnonymously()
   });
 
 // Save player name
-let playerName = null;
-let playerName = null;
+let playerName = localStorage.getItem("obgPlayerName") || null;
+
 function askPlayerName() {
   if (!playerName) {
     playerName = prompt("Enter your name for the leaderboard:");
@@ -50,7 +51,6 @@ window.askPlayerName = askPlayerName;
 
 // Save completed quiz score
 let quizSaved = false;
-
 
 async function saveQuizScore() {
   if (quizSaved || !playerName) return;
@@ -107,45 +107,7 @@ async function saveQuizScore() {
     });
 
     console.log("Quiz score saved!");
-  } catch (error) {
-    quizSaved = false;
-    console.error("Could not save score:", error);
-  }
-}
-  if (quizSaved || !playerName) return;
 
-  quizSaved = true;
-
-  try {
-    const signedIn = await authReady;
-
-    if (!signedIn || !auth.currentUser) {
-      throw new Error("Firebase login failed.");
-    }
-
-    const points = Number(S.sc) || 0;
-    const playerId = auth.currentUser.uid;
-    const playerRef = db.collection("players").doc(playerId);
-
-    await db.runTransaction(async transaction => {
-      const playerDoc = await transaction.get(playerRef);
-
-      if (playerDoc.exists) {
-        transaction.update(playerRef, {
-          name: playerName,
-          totalPoints: firebase.firestore.FieldValue.increment(points),
-          quizzesCompleted: firebase.firestore.FieldValue.increment(1)
-        });
-      } else {
-        transaction.set(playerRef, {
-          name: playerName,
-          totalPoints: points,
-          quizzesCompleted: 1
-        });
-      }
-    });
-
-    console.log("Quiz score saved!");
   } catch (error) {
     quizSaved = false;
     console.error("Could not save score:", error);
@@ -162,4 +124,4 @@ window.R = function() {
     saveQuizScore();
   }
 };
-window.askPlayerName = askPlayerName;
+
