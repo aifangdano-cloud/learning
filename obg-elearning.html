@@ -326,23 +326,4 @@ if(d){var tot=0,got=0,miss='';for(k=0;k<c.qs.length;k++)if(c.qs[k][3]){tot++;if(
 h+='<div class="card"><b>'+(O.opts[O.pk][1]?"✅ Correct":"❌ Not quite")+'</b><p class="fb">'+O.opts[O.pk][2]+'</p><p><b>Key questions asked:</b> '+got+' of '+tot+'</p>'+(miss?'<p><b>You missed:</b></p><ul>'+miss+'</ul>':'<p>You covered every key question. 🎉</p>')+'<p><b>Take-home:</b> '+c.take+'</p><button class="btn main" onclick="os('+O.i+')">Try again</button><button class="btn" onclick="oh()">Other cases</button></div>'}}
 a.innerHTML=h}
 R();
-</script></body></html>
-// Connect name entry and score saving to the quiz
-const originalStart = window.start;
-
-window.start = function(tp) {
-  if (!askPlayerName()) return;
-
-  quizSaved = false;
-  originalStart(tp);
-};
-
-const originalRender = window.R;
-
-window.R = function() {
-  originalRender();
-
-  if (window.S && S.v === "end") {
-    saveQuizScore();
-  }
-};
+</script></body></html> 
