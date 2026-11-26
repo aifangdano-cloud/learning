@@ -26,6 +26,9 @@ const authReady = auth.signInAnonymously()
     return false;
   });
 
+// Save player name
+let playerName = localStorage.getItem("obgPlayerName") || null;
+
 function askPlayerName() {
   if (!playerName) {
     playerName = prompt("Enter your name for the leaderboard:");
@@ -42,6 +45,8 @@ function askPlayerName() {
 
   return true;
 }
+
+window.askPlayerName = askPlayerName;
 
 // Save completed quiz score
 let quizSaved = false;
@@ -118,4 +123,3 @@ window.R = function() {
     saveQuizScore();
   }
 };
-
