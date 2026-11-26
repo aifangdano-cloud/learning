@@ -68,8 +68,6 @@ function askPlayerName() {
   return true;
 }
 
-window.askPlayerName = askPlayerName;
-
 // Save completed quiz score
 let quizSaved = false;
 
