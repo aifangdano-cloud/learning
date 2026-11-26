@@ -1,3 +1,29 @@
+
+// Save player name
+let playerName = localStorage.getItem("obgPlayerName") || null;
+
+function askPlayerName() {
+  const enteredName = prompt(
+    "Enter your name for the leaderboard:",
+    playerName || ""
+  );
+
+  if (enteredName === null) return false;
+
+  const cleanName = enteredName.trim().slice(0, 30);
+
+  if (!cleanName) {
+    alert("Please enter your name before starting.");
+    return false;
+  }
+
+  playerName = cleanName;
+  localStorage.setItem("obgPlayerName", playerName);
+  return true;
+}
+
+window.askPlayerName = askPlayerName;
+
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBwLFCzV7vJi7KPfViDNWHhVhYbgmA3VMI",
@@ -24,9 +50,6 @@ const authReady = auth.signInAnonymously()
     console.error("Firebase login error:", error);
     return false;
   });
-
-// Save player name
-let playerName = localStorage.getItem("obgPlayerName") || null;
 
 function askPlayerName() {
   if (!playerName) {
