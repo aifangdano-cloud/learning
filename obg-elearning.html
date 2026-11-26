@@ -239,11 +239,10 @@ take:"Always count the current pregnancy in gravida. Notation varies, so check h
 ["Start steroids immediately",0,"Steroids are for anticipated preterm birth, not for this finding alone."]]}],
 take:"SFH is a screening tool. A discrepancy of more than 2–3 cm needs an ultrasound."}
 ];
-
 var S={v:"home",tp:"",q:[],ci:0,si:0,sc:0,st:0,ok:0,n:0,opts:[],pk:null};
 function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
 function go(v,tp){S.v=v;if(tp)S.tp=tp;R();window.scrollTo(0,0)}
- 
+
 function load(){S.pk=null;S.opts=shuf(CASES[CASES.indexOf(S.q[S.ci])].steps[S.si].o)}
 function pick(i){if(S.pk!==null)return;S.pk=i;S.n++;if(S.opts[i][1]){S.ok++;S.sc+=10+Math.min(S.st,5)*2;S.st++}else S.st=0;R()}
 function nxt(){var c=S.q[S.ci];if(S.si<c.steps.length-1){S.si++}else{S.ci++;S.si=0}if(S.ci>=S.q.length){go("end");return}load();R();window.scrollTo(0,0)}
@@ -309,26 +308,18 @@ take:"Headache, visual disturbance and epigastric pain late in pregnancy: measur
 dx:{q:"Best advice?",o:[["Avoid the combined pill; offer progestin-only or non-hormonal options",1,"Migraine with aura plus oestrogen raises stroke risk, so combined methods are contraindicated."],["Start the combined pill",0,"It is contraindicated with migraine with aura."],["Start the pill with low-dose aspirin",0,"Aspirin does not make it safe."],["No contraception is needed",0,"She requested contraception and is at risk of pregnancy."]]},
 take:"Always screen for contraindications before prescribing: migraine with aura, smoking, BP, VTE, breastfeeding, drug interactions."}];
 var O={i:0,asked:[],left:0,pk:null,opts:[]};
- function start(tp) {
-  S.tp = tp;
-  S.v = "name";
-  R();
-}
-
-function submitPlayerName() {
-  var input = document.getElementById("playerNameInput");
-  var name = input.value.trim().slice(0, 30);
-
-  if (!name) {
-    alert("Please enter your name.");
+  function start(tp) {
+  if (typeof window.askPlayerName !== "function") {
+    alert("Name system not loaded. Please check leaderboard.js");
     return;
   }
 
-  window.setPlayerName(name);
-  quizSaved = false;
+  if (!window.askPlayerName()) return;
 
+  quizSaved = false;
+  S.tp = tp;
   S.q = shuf(CASES.filter(function(c) {
-    return S.tp == "all" || c.t == S.tp;
+    return tp == "all" || c.t == tp;
   }));
 
   S.ci = 0;
@@ -363,7 +354,8 @@ R();
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="leaderboard.js?v=100"></script>
+<script src="leaderboard.js?v=99"></script>
   
 </body>
 </html>
+
