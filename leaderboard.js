@@ -47,7 +47,10 @@ function askPlayerName() {
 }
 
 window.askPlayerName = askPlayerName;
-
+window.setPlayerName = function(name) {
+  playerName = name;
+  localStorage.setItem("obgPlayerName", name);
+};
 // Save completed quiz score
 let quizSaved = false;
 
